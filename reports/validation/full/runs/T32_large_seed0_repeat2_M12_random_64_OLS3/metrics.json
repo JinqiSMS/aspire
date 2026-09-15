@@ -1,0 +1,72 @@
+{
+  "parent_id": "T32_large_seed0",
+  "direction_repeat": 2,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31994153088,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "fresh_real_queries",
+  "run_id": "T32_large_seed0_repeat2_M12_random_64_OLS3",
+  "method": "random_64_gaussian_ols",
+  "status": "complete",
+  "training_repeat": 3,
+  "training_samples": 1048576,
+  "normalization": "signed",
+  "wall_seconds_fit": 0.21351590000267606,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      96508453581.10884,
+      80737515214.57455,
+      152502393383.2586
+    ],
+    "target_scale": 34841434277.81351,
+    "scaled_singular_values": [
+      1.0015921296568815,
+      0.9999976694713597,
+      0.9984076656667888
+    ],
+    "scaled_design_condition": 1.003189542808614,
+    "raw_design_condition": 1.8888731372259058,
+    "training_nmse": 0.001045311420086499,
+    "normal_equation_relative_residual": 4.656727350396711e-13,
+    "max_leverage": 0.4465938776651775,
+    "max_label_energy_share": 0.28062139201081976,
+    "top_one_percent_label_energy_share": 0.9999721922579078,
+    "lstsq_crosscheck_relative_error": 4.890534433164912e-13
+  },
+  "logical_learning_queries": 31995202054,
+  "per_layer_errors": [
+    0.013037289900738625,
+    0.0359563323253606
+  ],
+  "per_layer_frobenius_errors": [
+    0.018007655666754656,
+    0.041556260946513275
+  ],
+  "output_l1_error": 0.06994572663388471,
+  "max_weight_operator_error": 0.0359563323253606,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      2,
+      0
+    ]
+  ],
+  "parameter_success": true,
+  "joint_parameter_error": 0.06994572663388471,
+  "coefficient_l1_norm": 1.0033776380188257,
+  "coefficients_raw": [
+    0.3004081247544039,
+    0.36999501565968856,
+    0.33297449760473324
+  ],
+  "minimum_hidden_weight": -0.010829426002350222,
+  "angular_gaussian_nmse": 0.0009785988937240106
+}

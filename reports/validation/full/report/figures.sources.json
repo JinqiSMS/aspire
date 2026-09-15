@@ -1,0 +1,10 @@
+{
+  "records": "../records.json",
+  "manifest": "../manifest.json",
+  "figures": [
+    "parameter_errors",
+    "output_comparison",
+    "query_cost",
+    "hessian_diagnostics"
+  ]
+}

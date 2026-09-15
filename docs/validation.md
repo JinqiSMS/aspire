@@ -16,4 +16,10 @@ The offline report's JavaScript filters were executed and verified at 560 total 
 
 GitHub Actions also passed on both Ubuntu and Windows for release commit `c17b0384f0830afcd0f9a53e58364172374d19a3`: each job created the Python 3.10 conda environment, checked dependencies, ran the numerical tests, and regenerated the best checkpoint experiment with reference verification. See the [completed CI run](https://github.com/JinqiSMS/aspire/actions/runs/34986355727).
 
-Full first-layer timing is being measured separately. The checkpoint results above do not include fresh first-layer sampling. Timing measurements use the local Intel Core i5-13500H with one numerical-library thread and exclude installation and download time.
+The fresh full best preset completed in 3501.31 seconds (58.36 minutes). Its first layer took 3474.86 seconds (57.91 minutes), using 16,777,216 independent chains with 32 steps each. The remaining stages took 26.41 seconds. The recovered first-layer entries differ from the historical checkpoint by at most `1.1102230246251565e-16`. All 30 main records passed reference verification with maximum metric difference `5.61644619700985e-11`; all 25 main OLS combinations met the parameter threshold. The output L1 error median is `0.07112770206042718`.
+
+Physical costs for this full preset were 31,994,153,088 first-layer queries, 1,950 training-Hessian queries, 900 validation-Hessian queries, 5,242,880 Gaussian labels, and 20,000 prediction-evaluation queries: 31,999,418,818 in total. This includes five direction banks and five Gaussian training sets. It differs from the single-reconstruction learning cost quoted in the README.
+
+The complete compact outputs, reconstructed parameters, stage ledger, and figures are in [full](../reports/validation/full/). See [full_run.json](../reports/validation/full_run.json) for the validation summary and separate computation/verification source hashes. The full job used the initial release's recovery implementation; subsequent changes affected reporting and reference verification. Its results were rechecked using the final verifier.
+
+Timing measurements use the local Intel Core i5-13500H with one numerical-library thread and exclude installation and download time. Checkpoint timings exclude first-layer sampling; full timings include it.

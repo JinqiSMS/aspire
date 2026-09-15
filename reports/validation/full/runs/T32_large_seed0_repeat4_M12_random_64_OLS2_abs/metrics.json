@@ -1,0 +1,72 @@
+{
+  "parent_id": "T32_large_seed0",
+  "direction_repeat": 4,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31994153088,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "fresh_real_queries",
+  "run_id": "T32_large_seed0_repeat4_M12_random_64_OLS2_abs",
+  "method": "random_64_gaussian_ols_abs",
+  "status": "complete",
+  "training_repeat": 2,
+  "training_samples": 1048576,
+  "normalization": "absolute",
+  "wall_seconds_fit": 0.20418980000249576,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      260020009784.834,
+      135461768807.85007,
+      148202901835.6077
+    ],
+    "target_scale": 77260075709.52672,
+    "scaled_singular_values": [
+      1.001693503458891,
+      0.9999953640639765,
+      0.9983082675105031
+    ],
+    "scaled_design_condition": 1.0033909725668502,
+    "raw_design_condition": 1.919513855483716,
+    "training_nmse": 0.0004141625853555537,
+    "normal_equation_relative_residual": 8.317944948815293e-13,
+    "max_leverage": 0.9705867173061642,
+    "max_label_energy_share": 0.5268951753840054,
+    "top_one_percent_label_energy_share": 0.9999900910820235,
+    "lstsq_crosscheck_relative_error": 8.211119094756629e-13
+  },
+  "logical_learning_queries": 31995202054,
+  "per_layer_errors": [
+    0.013037289900738625,
+    0.03055249632014623
+  ],
+  "per_layer_frobenius_errors": [
+    0.018007655666754656,
+    0.04042220607839363
+  ],
+  "output_l1_error": 0.0832194434634137,
+  "max_weight_operator_error": 0.03055249632014623,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      2,
+      0
+    ]
+  ],
+  "parameter_success": true,
+  "joint_parameter_error": 0.0832194434634137,
+  "coefficient_l1_norm": 1.0183939905076842,
+  "coefficients_raw": [
+    0.30092060685546856,
+    0.36578177892702207,
+    0.3516916047251935
+  ],
+  "minimum_hidden_weight": 0.010120883337872939,
+  "angular_gaussian_nmse": 0.0008098200129421882
+}

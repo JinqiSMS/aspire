@@ -111,7 +111,7 @@ Rebuild figures without oracle calls:
 python reproduce.py --report-only --output results/reproduction_best_checkpoint
 ```
 
-Selected release outputs are included in [reports/reproduction](reports/reproduction/). See [docs/algorithm.md](docs/algorithm.md) for the mathematics and [docs/modules.md](docs/modules.md) for the module map.
+Selected release outputs are included in [reports/reproduction](reports/reproduction/). The independently recomputed full run is in [reports/validation/full](reports/validation/full/); open its [offline report](reports/validation/full/report/index.html) after cloning. See [docs/algorithm.md](docs/algorithm.md) for the mathematics and [docs/modules.md](docs/modules.md) for the module map.
 
 ## Expected numerical results
 
@@ -126,6 +126,8 @@ Joint parameter error                 0.058729695636741186
 ```
 
 The output error and coefficient norm are different quantities. Across the 25 main OLS combinations for this prefix, the output L1 error has median `0.07112770` and range `[0.05872970, 0.08604529]`; all meet threshold `0.1`. They share one first-layer estimate and are not 25 independent full-network recoveries.
+
+A fresh Python 3.10 full run reproduced these results: all 25 main OLS combinations passed, the first-layer entries differed from the historical checkpoint by at most `1.1e-16`, and the 30 compared main records differed by at most `5.7e-11`. See [full_run.json](reports/validation/full_run.json) for the measured values and query ledger.
 
 ## Randomness and settings
 
@@ -167,7 +169,7 @@ Single-reconstruction learning total 31,995,202,054
 
 The presets run multiple crossed repetitions, so their physical totals differ. Shared data is counted once in `manifest.json`. Do not sum inherited logical per-case costs across records. Held-out Hessians and prediction evaluation are separate.
 
-Initial Python 3.10 checkpoint computation took about **36 seconds**, plus report generation, on an Intel Core i5-13500H with one BLAS thread. The historical Python 3.12 first-layer run took 26.8 minutes; Python 3.10 timing is measured separately. See [docs/validation.md](docs/validation.md) for current validation and full-run timing. Installation and downloads are not included.
+On an Intel Core i5-13500H with one BLAS thread, Python 3.10 checkpoint computation took **28-36 seconds**, plus about 5-7 seconds for the report. The fresh full best preset took **58.36 minutes**: 57.91 minutes for the first layer and 26.41 seconds for the later stages. The four-prefix checkpoint study took 118.49 seconds before report generation. These are local wall-clock measurements, not guaranteed runtimes; installation and downloads are excluded. See [docs/validation.md](docs/validation.md) for the verification records.
 
 Checkpoint mode generates several hundred MiB of data locally; study mode shares Gaussian inputs and needs roughly 400 MiB plus outputs. Full first-layer sampling holds large arrays in memory, so allow several GiB of free RAM. Environments and generated datasets are excluded from Git.
 
