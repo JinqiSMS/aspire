@@ -1,7 +1,6 @@
 """Check stage boundaries, portable paths, and frozen reproduction inputs."""
 import json
 from copy import deepcopy
-from pathlib import Path
 import numpy as np
 import pytest
 import yaml
@@ -102,7 +101,7 @@ def test_cached_results_are_reverified_when_requested(tmp_path, monkeypatch):
                  "implementation_hash": "test-version"}
     (output / "manifest.json").write_text(json.dumps({"signature": signature}), encoding="utf-8")
     monkeypatch.setattr(reproduction, "ROOT", tmp_path)
-    monkeypatch.setattr(reproduction, "inside", Path)
+    monkeypatch.setattr("aspire.io.ROOT", tmp_path)
     monkeypatch.setattr(reproduction, "implementation_snapshot", lambda: ("test-version", tmp_path))
     reproduction.run(specification, mode="checkpoint", preset="best", output=output, verify_reference=True)
     manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
