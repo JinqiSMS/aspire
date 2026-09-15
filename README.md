@@ -4,7 +4,7 @@
 
 This experiment recovers an **8 → 3 → 3 → 1** polynomial network with activation $z\mapsto z^k$, for **$k=4,6,8$**, using noiseless real-valued function queries.
 
-The first hidden layer uses column-space recovery and ASPIRE gradient moments. The second hidden layer uses multiple Hessians and symmetric generalized eigendecomposition, followed by coordinatewise absolute values and unit-column-sum normalization. The output coefficients are fitted by ordinary least squares on standard Gaussian inputs.
+The first hidden layer uses column-space recovery and ASPIRE. The second hidden layer uses multiple Hessians and symmetric generalized eigendecomposition, followed by coordinatewise absolute values and unit-column-sum normalization. The output coefficients are fitted by ordinary least squares on standard Gaussian inputs.
 
 ## Installation
 
