@@ -7,7 +7,7 @@ import yaml
 from aspire import ROOT
 from aspire.architecture import Architecture
 from aspire.config import resolve
-from aspire.experiments.experiment_01 import (load_target, first_layer_config, obtain_first_layer,
+from aspire.experiments.experiment import (load_target, first_layer_config, obtain_first_layer,
                                            load_first_layer_from, file_hash)
 from aspire.instances import generate
 from aspire.io import inside, save_npz, write_json
@@ -21,7 +21,7 @@ from aspire.numeric import even_power
 
 def test_fixed_inputs_and_first_layer_settings():
     target, reference = load_target()
-    specification = yaml.safe_load((ROOT / "configs/experiment_01.yaml").read_text(encoding="utf-8"))
+    specification = yaml.safe_load((ROOT / "configs/experiment_k4.yaml").read_text(encoding="utf-8"))
     assert target.weights[0].shape == (8, 3)
     assert specification["first_layer"] == reference["first_layer_configuration"]
     assert specification["public_bounds"] == reference["public_bounds"]
@@ -32,7 +32,7 @@ def test_fixed_inputs_and_first_layer_settings():
 
 def test_first_layer_stops_before_hessian_measurements(tmp_path, monkeypatch):
     monkeypatch.setattr("aspire.io.ROOT", tmp_path)
-    specification = yaml.safe_load((ROOT / "configs/experiment_01.yaml").read_text(encoding="utf-8"))
+    specification = yaml.safe_load((ROOT / "configs/experiment_k4.yaml").read_text(encoding="utf-8"))
     specification["architecture"] = {"d": 2, "hidden_widths": [2, 2], "k": 4}
     specification["public_bounds"] = {"kappa0": 10, "mu": 0.01}
     specification["first_layer"].update(samples=32, steps=4, batch_size=16, query_budget=100000)
@@ -53,7 +53,7 @@ def test_first_layer_stops_before_hessian_measurements(tmp_path, monkeypatch):
 def test_checkpoint_rejects_changed_sampling_settings(tmp_path, monkeypatch):
     monkeypatch.setattr("aspire.io.ROOT", tmp_path)
     target, reference = load_target()
-    specification = yaml.safe_load((ROOT / "configs/experiment_01.yaml").read_text(encoding="utf-8"))
+    specification = yaml.safe_load((ROOT / "configs/experiment_k4.yaml").read_text(encoding="utf-8"))
     specification["first_layer"]["algorithm_seed"] += 1
     ledger = QueryLedger(100, 0)
     with pytest.raises(ValueError, match="different settings"):
@@ -85,7 +85,7 @@ def test_parameter_exports_preserve_permutation_and_sign_symmetry(tmp_path, monk
 
 
 def test_output_paths_are_bounded():
-    assert inside("data\\experiment_01\\ground_truth.npz") == ROOT / "data/experiment_01/ground_truth.npz"
+    assert inside("data\\experiment\\ground_truth.npz") == ROOT / "data/experiment/ground_truth.npz"
     with pytest.raises(ValueError):
         inside("../outside.json")
 
@@ -97,7 +97,7 @@ def test_higher_activation_real_suffix_hessian_and_checkpoint_guard(tmp_path, mo
     baseline, _ = load_target(4)
     for actual, expected in zip(target.weights, baseline.weights):
         np.testing.assert_array_equal(actual, expected)
-    specification = yaml.safe_load((ROOT / "configs/experiment_01.yaml").read_text(encoding="utf-8"))
+    specification = yaml.safe_load((ROOT / "configs/experiment_k4.yaml").read_text(encoding="utf-8"))
     specification["architecture"]["k"] = k
     architecture = Architecture(**specification["architecture"])
     ledger = QueryLedger(10000, 0)
@@ -126,9 +126,9 @@ def test_even_power_preserves_batch_values(k):
 @pytest.fixture
 def stored_first_layer(tmp_path, monkeypatch):
     target, reference = load_target(6)
-    specification = yaml.safe_load((ROOT / "configs/experiment_01_k6.yaml").read_text(encoding="utf-8"))
+    specification = yaml.safe_load((ROOT / "configs/experiment_k6.yaml").read_text(encoding="utf-8"))
     monkeypatch.setattr("aspire.io.ROOT", tmp_path)
-    monkeypatch.setattr("aspire.experiments.experiment_01.ROOT", tmp_path)
+    monkeypatch.setattr("aspire.experiments.experiment.ROOT", tmp_path)
     source = tmp_path / "source"
     source.mkdir()
     save_npz(source / "first_layer.npz", W1=target.weights[0])
@@ -144,7 +144,7 @@ def test_explicit_first_layer_reuse_has_zero_queries(stored_first_layer, tmp_pat
     source, specification, target, reference = stored_first_layer
     def reject_sampling(*args, **kwargs):
         pytest.fail("Reusing a first layer must not start sampling")
-    monkeypatch.setattr("aspire.experiments.experiment_01.recover_network", reject_sampling)
+    monkeypatch.setattr("aspire.experiments.experiment.recover_network", reject_sampling)
     architecture = Architecture(**specification["architecture"])
     ledger = QueryLedger(100, 0)
     oracle = CountedRealOracle(target.forward, 8, ledger)

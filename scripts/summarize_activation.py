@@ -39,7 +39,7 @@ def main():
         metrics = read(folder / "metrics.json")
         configuration = manifest["signature"]["configuration"]
         specifications.append(configuration)
-        command = "python run_experiment.py --config configs/experiment_01" + (f"_k{k}" if k != 4 else "") + ".yaml"
+        command = f"python run_experiment.py --config configs/experiment_k{k}.yaml"
         reuse = manifest.get("first_layer_reuse_source")
         command_output = (f"results/activation_comparison/k{k}" if root.is_relative_to(PROJECT_ROOT / "examples")
                           else folder.relative_to(PROJECT_ROOT).as_posix())

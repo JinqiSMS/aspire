@@ -9,9 +9,9 @@ Each exponent has its own first-layer estimate. The origins and any imported sou
 These commands start new complete experiments; existing results require a different --output directory.
 
 ```bash
-python run_experiment.py --config configs/experiment_01.yaml --output results/activation_comparison/k4
-python run_experiment.py --config configs/experiment_01_k6.yaml --output results/activation_comparison/k6
-python run_experiment.py --config configs/experiment_01_k8.yaml --output results/activation_comparison/k8
+python run_experiment.py --config configs/experiment_k4.yaml --output results/activation_comparison/k4
+python run_experiment.py --config configs/experiment_k6.yaml --output results/activation_comparison/k6
+python run_experiment.py --config configs/experiment_k8.yaml --output results/activation_comparison/k8
 python scripts/summarize_activation.py --output examples/activation_comparison
 ```
 

@@ -17,7 +17,7 @@ def save_comparison(output, true_weights, true_output, recovered_weights, recove
     comparison = {"alignment": "Sequential hidden-unit permutations; sign alignment in the first layer only",
                   "permutations": permutations, "parameters": {}}
     arrays, entries = {}, []
-    lines = [f"EXPERIMENT 1 (k={activation_k}): RECOVERED PARAMETERS AND GROUND TRUTH", "",
+    lines = [f"EXPERIMENT (k={activation_k}): RECOVERED PARAMETERS AND GROUND TRUTH", "",
              "Recovered values below are aligned for hidden-unit permutation and first-layer sign symmetry.",
              "Raw estimates and aligned estimates are both retained in weights.json and weights.npz.", ""]
     for name, target in truth.items():
@@ -53,7 +53,7 @@ def create_figures(output):
     comparison = json.loads((output / "weights.json").read_text(encoding="utf-8"))
     metrics = json.loads((output / "metrics.json").read_text(encoding="utf-8"))
     configuration = json.loads((output / "run.json").read_text(encoding="utf-8"))["signature"]["configuration"]
-    experiment_title = f"Experiment 1 (k={configuration['architecture']['k']})"
+    experiment_title = f"Experiment (k={configuration['architecture']['k']})"
     folder = output / "figures"
     folder.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 10, "axes.titlesize": 12, "pdf.fonttype": 42,

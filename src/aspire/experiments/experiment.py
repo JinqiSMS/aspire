@@ -1,4 +1,4 @@
-"""Experiment 1: column recovery, ASPIRE moments, multi-Hessian recovery, and OLS."""
+"""Experiment: column recovery, ASPIRE moments, multi-Hessian recovery, and OLS."""
 import argparse
 from copy import deepcopy
 from datetime import datetime, timezone
@@ -66,7 +66,7 @@ def first_layer_config(specification):
 
 
 def load_target(k=4):
-    folder = ROOT / "data/experiment_01"
+    folder = ROOT / "data/experiment"
     manifest = read_json(folder / "manifest.json")
     path = folder / "ground_truth.npz"
     if file_hash(path) != manifest["files"][path.name]:
@@ -131,7 +131,7 @@ def obtain_first_layer(real_oracle, architecture, specification, output, use_che
         if (specification["first_layer"] != reference["first_layer_configuration"] or
                 specification["public_bounds"] != reference["public_bounds"]):
             raise ValueError("The first-layer checkpoint has different settings")
-        path = ROOT / "data/experiment_01/first_layer.npz"
+        path = ROOT / "data/experiment/first_layer.npz"
         if file_hash(path) != reference["files"][path.name]:
             raise ValueError("First-layer checkpoint checksum mismatch")
         with np.load(path, allow_pickle=False) as saved:
@@ -218,7 +218,7 @@ def _run(specification, output, use_checkpoint=False, first_layer_from=None):
     output.mkdir(parents=True, exist_ok=True)
     architecture = Architecture(**specification["architecture"])
     if architecture.d != 8 or list(architecture.hidden_widths) != [3, 3]:
-        raise ValueError("Experiment 1 uses architecture 8 -> 3 -> 3 -> 1")
+        raise ValueError("Experiment uses architecture 8 -> 3 -> 3 -> 1")
     if use_checkpoint and architecture.k != 4:
         raise ValueError("The provided first-layer checkpoint uses k=4; compute a fresh first layer")
     if use_checkpoint and first_layer_from is not None:
@@ -229,7 +229,7 @@ def _run(specification, output, use_checkpoint=False, first_layer_from=None):
     manifest_path = output / "run.json"
     if manifest_path.exists() and read_json(manifest_path)["signature"] != signature:
         raise ValueError("Output contains a different configuration or source version; choose a new --output")
-    manifest = {"experiment": "experiment_01", "signature": signature, "environment": environment(),
+    manifest = {"experiment": "experiment", "signature": signature, "environment": environment(),
                 "started_at": datetime.now(timezone.utc).isoformat(), "status": "running",
                 "activation_k": architecture.k, "active_stage": "first_layer"}
     write_json(manifest_path, manifest)
@@ -329,7 +329,7 @@ def run(specification, output, use_checkpoint=False, first_layer_from=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--config", default="configs/experiment_01.yaml")
+    parser.add_argument("--config", default="configs/experiment_k4.yaml")
     parser.add_argument("--activation", type=int, choices=(4, 6, 8), help="Override the activation exponent")
     parser.add_argument("--output", help="Output directory inside the project")
     source = parser.add_mutually_exclusive_group()
@@ -342,7 +342,7 @@ def main():
     if args.activation is not None:
         specification["architecture"]["k"] = args.activation
     k = specification["architecture"]["k"]
-    stem = "results/experiment_01" + (f"_k{k}" if k != 4 else "")
+    stem = f"results/experiment_k{k}"
     output = inside(args.output or (stem + "_checkpoint" if args.use_first_layer_checkpoint else stem))
     if args.figures_only:
         from ..reporting.parameters import create_figures

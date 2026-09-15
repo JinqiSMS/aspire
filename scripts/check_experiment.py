@@ -1,4 +1,4 @@
-"""Check parameter files, evaluation identities, and Experiment 1 metrics."""
+"""Check parameter files, evaluation identities, and Experiment metrics."""
 import json
 from pathlib import Path
 import sys
@@ -13,7 +13,7 @@ from aspire.io import inside
 
 
 def main():
-    folder = inside(sys.argv[1] if len(sys.argv) > 1 else "results/experiment_01")
+    folder = inside(sys.argv[1] if len(sys.argv) > 1 else "results/experiment_k4")
     metrics = json.loads((folder / "metrics.json").read_text(encoding="utf-8"))
     manifest = json.loads((folder / "run.json").read_text(encoding="utf-8"))
     assert manifest["status"] == "complete"
@@ -47,7 +47,7 @@ def main():
     for name in ("weight_comparison", "parameter_errors", "output_coefficients"):
         for extension in ("png", "pdf"):
             assert (folder / "figures" / f"{name}.{extension}").stat().st_size > 1000
-    print("Experiment 1: metric and parameter checks passed")
+    print("Experiment: metric and parameter checks passed")
 
 
 if __name__ == "__main__":

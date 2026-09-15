@@ -1,9 +1,9 @@
 # Module guide
 
 - `run_experiment.py`: command-line entry point and numerical-library thread settings.
-- `configs/experiment_01*.yaml`: activation exponent, sample budgets, tolerances, and seeds.
-- `data/experiment_01/`: fixed target arrays and their checksum.
-- `src/aspire/experiments/experiment_01.py`: complete stage orchestration, query accounting, regression, and evaluation.
+- `configs/experiment_k*.yaml`: activation exponent, sample budgets, tolerances, and seeds.
+- `data/experiment/`: fixed target arrays and their checksum.
+- `src/aspire/experiments/experiment.py`: complete stage orchestration, query accounting, regression, and evaluation.
 - `src/aspire/recovery/`: column recovery, Hit-and-Run sampling, ASPIRE moments, generalized eigendecomposition, and OLS.
 - `src/aspire/oracles/`: counted real-query interpolation, recovered-prefix coordinate operations, and suffix evaluation.
 - `src/aspire/evaluation/`: symmetry alignment and parameter/prediction metrics.

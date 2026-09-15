@@ -1,4 +1,4 @@
-# Experiment 1: layerwise parameter recovery
+# Experiment: layerwise parameter recovery
 
 The target is the homogeneous polynomial network
 
@@ -8,7 +8,7 @@ h_2(x)=(W_2^\top h_1(x))^{\odot 4},\qquad
 f(x)=a^\top h_2(x).
 $$
 
-Here $W_1\in\mathbb R^{8\times3}$, $W_2\in\mathbb R^{3\times3}$, and $a\in\mathbb R^3$. The experiment uses a fixed target and noiseless real-valued function queries. All random seeds are explicit in `configs/experiment_01.yaml`.
+Here $W_1\in\mathbb R^{8\times3}$, $W_2\in\mathbb R^{3\times3}$, and $a\in\mathbb R^3$. The experiment uses a fixed target and noiseless real-valued function queries. All random seeds are explicit in `configs/experiment_k4.yaml`.
 
 ## First hidden layer
 

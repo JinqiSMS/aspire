@@ -1,4 +1,4 @@
-EXPERIMENT 1 (k=8): RECOVERED PARAMETERS AND GROUND TRUTH
+EXPERIMENT (k=8): RECOVERED PARAMETERS AND GROUND TRUTH
 
 Recovered values below are aligned for hidden-unit permutation and first-layer sign symmetry.
 Raw estimates and aligned estimates are both retained in weights.json and weights.npz.

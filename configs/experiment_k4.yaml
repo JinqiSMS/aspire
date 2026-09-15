@@ -1,4 +1,4 @@
-# Experiment 1: a fixed target and explicit independent random streams.
+# Experiment: a fixed target and explicit independent random streams.
 architecture: {d: 8, hidden_widths: [3, 3], k: 4}
 public_bounds: {kappa0: 2.0, mu: 0.25}
 first_layer:

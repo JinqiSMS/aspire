@@ -13,7 +13,7 @@ dependencies = ["numpy", "scipy", "mpmath", "matplotlib", "PyYAML"]
 test = ["pytest"]
 
 [project.scripts]
-aspire-experiment = "aspire.experiments.experiment_01:main"
+aspire-experiment = "aspire.experiments.experiment:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

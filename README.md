@@ -1,6 +1,6 @@
 # ASPIRE
 
-## Experiment 1: layerwise parameter recovery
+## Experiment: layerwise parameter recovery
 
 This experiment recovers an **8 → 3 → 3 → 1** polynomial network with activation $z\mapsto z^k$, for **$k=4,6,8$**, using noiseless real-valued function queries.
 
@@ -15,15 +15,7 @@ conda env create -f environment.yml
 conda activate aspire
 ```
 
-The conda environment is named `aspire` and uses **Python 3.10**. Dependencies are pinned in `requirements-lock.txt`, including NumPy 1.26.4 and SciPy 1.13.1. Computation runs on a CPU.
-
-For an existing environment:
-
-```bash
-conda activate aspire
-python -c "import sys; assert sys.version_info[:2] == (3, 10)"
-python -m pip install -r requirements-lock.txt
-```
+The conda environment is named `aspire` and uses **Python 3.10**. Dependencies are pinned in `requirements.txt`, including NumPy 1.26.4 and SciPy 1.13.1. Computation runs on a CPU.
 
 ## Run a configuration
 
@@ -31,20 +23,20 @@ Run commands from the repository root, using new output directories. On a fresh 
 
 ```bash
 # Fourth-power activation
-python run_experiment.py --config configs/experiment_01.yaml --output results/activation_comparison/k4
+python run_experiment.py --config configs/experiment_k4.yaml --output results/activation_comparison/k4
 
 # Sixth-power activation
-python run_experiment.py --config configs/experiment_01_k6.yaml --output results/activation_comparison/k6
+python run_experiment.py --config configs/experiment_k6.yaml --output results/activation_comparison/k6
 
 # Eighth-power activation
-python run_experiment.py --config configs/experiment_01_k8.yaml --output results/activation_comparison/k8
+python run_experiment.py --config configs/experiment_k8.yaml --output results/activation_comparison/k8
 ```
 
 Run only the command for the exponent you need. The three configurations have identical target weights, numerical hyperparameters, and random seeds; only `architecture.k` changes.
 
 Use an empty or new output directory for a full run. For another full execution, use a new path such as `--output results/run2/k6`.
 
-Without arguments, `python run_experiment.py` runs `configs/experiment_01.yaml` and writes to `results/experiment_01/`.
+Without arguments, `python run_experiment.py` runs `configs/experiment_k4.yaml` and writes to `results/experiment_k4/`.
 
 After completing all three configurations, generate the comparison report and figures:
 
@@ -54,7 +46,7 @@ python scripts/summarize_activation.py --output results/activation_comparison
 
 ## Configuration and random seeds
 
-The complete settings are in [experiment_01.yaml](configs/experiment_01.yaml), [experiment_01_k6.yaml](configs/experiment_01_k6.yaml), and [experiment_01_k8.yaml](configs/experiment_01_k8.yaml).
+The complete settings are in [experiment_k4.yaml](configs/experiment_k4.yaml), [experiment_k6.yaml](configs/experiment_k6.yaml), and [experiment_k8.yaml](configs/experiment_k8.yaml).
 
 - First layer: **16,777,216 independent chains, 32 transitions per chain**, batch size 4,096, and 16 column-space probes; seed `3141116543`.
 - Second layer: one anchor Hessian, 12 probe Hessians, and 64 random mixtures; direction seed `431061063`, mixture seed `2356887966`.
@@ -62,7 +54,7 @@ The complete settings are in [experiment_01.yaml](configs/experiment_01.yaml), [
 - Output regression: **1,048,576** standard Gaussian inputs; seed `1586144878`.
 - Prediction evaluation: 20,000 angular directions; seed `1444349591`.
 
-Each stage uses its own `numpy.random.default_rng(seed)`. The entry point fixes numerical-library thread counts to one. Batch size is part of the first-layer random-number layout. The target arrays in `data/experiment_01/ground_truth.npz` are checked by SHA-256. Floating-point values can vary slightly between numerical-library builds.
+Each stage uses its own `numpy.random.default_rng(seed)`. The entry point fixes numerical-library thread counts to one. Batch size is part of the first-layer random-number layout. The target arrays in `data/experiment/ground_truth.npz` are checked by SHA-256. Floating-point values can vary slightly between numerical-library builds.
 
 ## View one experiment's results
 
@@ -132,14 +124,3 @@ Complete learning-query totals, including the first layer, training Hessians, an
 - $k=8$: **33,337,385,790**; including held-out Hessians and prediction evaluation: **33,337,406,114**.
 
 The network degree is $k^2$. First-layer gradient interpolation uses $k^2+1$ nodes per direction, and suffix-Hessian interpolation uses $k+1$. Degree-dependent node counts and radius bounds explain the different query costs. Exact stage counts are saved in `queries.json`.
-
-## Checks and source layout
-
-```bash
-python -m pytest tests -q --basetemp tmp/pytest
-python scripts/check_experiment.py results/activation_comparison/k6
-```
-
-The second command validates parameter files, symmetry alignment, nonnegative second-layer normalization, metrics, query accounting, and figure files. GitHub Actions runs numerical tests covering all three exponents and checks the recorded artifacts on Linux and Windows.
-
-See [docs/modules.md](docs/modules.md) for the code map. Runtime outputs, caches, local archives, and environments are excluded from Git. Source code, comments, configuration, documentation, and output labels use English.

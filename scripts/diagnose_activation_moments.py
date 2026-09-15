@@ -11,7 +11,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 import numpy as np
 from scipy.special import roots_legendre
-from aspire.experiments.experiment_01 import load_target
+from aspire.experiments.experiment import load_target
 from aspire.io import write_json
 from aspire.recovery.moments import moment_directions
 
