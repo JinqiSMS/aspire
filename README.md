@@ -45,6 +45,8 @@ This produces five hidden recoveries, 25 main OLS fits, and 25 absolute-normaliz
 
 `--verify-reference` compares the 30 main records against historical metrics with absolute tolerance `1e-7`. The 25 absolute-normalization controls are separate. The initial Python 3.10 comparison differed by at most about `5.6e-15`.
 
+When saved results already exist, `--verify-reference` rechecks their metrics without rerunning oracle calls. Failed main records and non-finite metrics fail verification. Use a new `--output` directory to regenerate the experiment itself.
+
 ## Recompute the first layer as well
 
 ```bash

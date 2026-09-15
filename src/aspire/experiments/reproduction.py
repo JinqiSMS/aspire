@@ -159,16 +159,28 @@ def compare_reference(rows, reference_path, tolerance=1e-7):
     lookup = {tuple(row.get(key) for key in fields): row for row in reference_rows}
     maximum = 0.0
     matched = 0
+    failures = []
+    seen = set()
     for row in rows:
-        if row["status"] != "complete" or row["method"].endswith("_abs"):
+        if row["method"].endswith("_abs"):
             continue
-        expected = lookup[tuple(row.get(key) for key in fields)]
-        error = max(abs(row["output_l1_error"] - expected["output_l1_error"]),
-                    float(np.max(abs(np.asarray(row["per_layer_errors"]) - expected["per_layer_errors"]))))
+        key = tuple(row.get(field) for field in fields)
+        if row["status"] != "complete" or key not in lookup or key in seen:
+            failures.append({"key": list(key), "reason": "Incomplete, unknown, or duplicate main record"})
+            continue
+        seen.add(key)
+        expected = lookup[key]
+        actual_metrics = np.asarray([row["output_l1_error"], *row["per_layer_errors"]], dtype=float)
+        expected_metrics = np.asarray([expected["output_l1_error"], *expected["per_layer_errors"]], dtype=float)
+        if actual_metrics.shape != expected_metrics.shape or not np.all(np.isfinite(actual_metrics)):
+            failures.append({"key": list(key), "reason": "Invalid or non-finite numerical metrics"})
+            continue
+        error = float(np.max(np.abs(actual_metrics - expected_metrics)))
         maximum = max(maximum, error)
         matched += 1
     return {"matched_records": matched, "maximum_metric_difference": maximum,
-            "absolute_tolerance": tolerance, "passed": matched > 0 and maximum <= tolerance}
+            "absolute_tolerance": tolerance, "failures": failures,
+            "passed": matched > 0 and not failures and maximum <= tolerance}
 
 
 def run(specification, *, mode, preset, output, verify_reference=False):
@@ -196,7 +208,15 @@ def run(specification, *, mode, preset, output, verify_reference=False):
             raise ValueError("Output belongs to a different protocol; choose a new --output directory")
         if (output / "records.json").exists():
             print("Saved result found; use a new --output directory for fresh computation.", flush=True)
-            return read_json(output / "records.json")
+            rows = read_json(output / "records.json")
+            if verify_reference:
+                verification = compare_reference(rows, ROOT / "reference/expected_metrics.json")
+                previous["reference_verification"] = verification
+                write_json(manifest_path, previous)
+                if not verification["passed"]:
+                    raise RuntimeError(f"Historical reference verification failed: {verification}")
+                print(f"REFERENCE verified {verification['matched_records']} saved main records", flush=True)
+            return rows
     reference = read_json(ROOT / "reference/manifest.json")
     manifest = {"signature": signature, "environment": environment(),
                 "implementation_snapshot": snapshot.relative_to(ROOT).as_posix(),
@@ -329,7 +349,7 @@ def run(specification, *, mode, preset, output, verify_reference=False):
     write_json(manifest_path, manifest)
     print(f"COMPLETE records={len(rows)} seconds={elapsed:.2f} output={output.relative_to(ROOT).as_posix()}", flush=True)
     if verification is not None and not verification["passed"]:
-        raise RuntimeError(f"Historical comparison exceeded tolerance: {verification}")
+        raise RuntimeError(f"Historical reference verification failed: {verification}")
     return rows
 
 

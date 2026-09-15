@@ -2,7 +2,7 @@
 
 The local conda environment is named `aspire`, using Python 3.10.21, NumPy 1.26.4, and SciPy 1.13.1. `conda activate aspire` resolves the correct interpreter, and `python -m pip check` reports no broken requirements.
 
-The initial test run passed 51 tests, covering numerical oracles, information boundaries, sampling, checkpoints, generalized recovery, portable paths, and frozen input checksums.
+The current test suite passes 56 tests, covering numerical oracles, information boundaries, sampling, checkpoints, generalized recovery, portable paths, frozen input checksums, and reference verification. The verification tests cover cached-result rechecks and rejection of failed, non-finite, unknown, or duplicate main records. The initial release had 51 tests; the five additional cases test verification behavior without changing recovery mathematics.
 
 The best checkpoint preset regenerated Hessians and Gaussian samples and produced 55 records: five hidden recoveries, 25 main OLS fits, and 25 absolute-normalization controls. Its 30 main records match historical metrics with maximum absolute difference about `5.6e-15`. Computation took 36.01 seconds, excluding report generation.
 
