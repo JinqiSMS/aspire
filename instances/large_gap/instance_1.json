@@ -1,0 +1,43 @@
+{
+  "instance_id": "large_gap_1",
+  "candidate_id": 2122,
+  "k": 4,
+  "hidden_widths": [
+    3,
+    3
+  ],
+  "higher_weights": [
+    [
+      [
+        0.57898721018962,
+        0.03733835500748072,
+        0.3131725881015532
+      ],
+      [
+        0.38852598086172385,
+        0.1894564505843036,
+        0.6438768898282359
+      ],
+      [
+        0.03248680894865609,
+        0.7732051944082158,
+        0.04295052207021075
+      ]
+    ]
+  ],
+  "output_weights": [
+    0.12996480298252625,
+    0.7112960910079363,
+    0.1587391060095375
+  ],
+  "public_bounds": {
+    "kappa0": 4,
+    "mu": 0.25,
+    "gamma": null
+  },
+  "verified_population_gaps": [
+    0.04938078770225498
+  ],
+  "construction_manifest": "instances/large_gap/construction_manifest.json",
+  "gap_certificate": "numerical_convergence_only"
+}

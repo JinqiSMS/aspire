@@ -1,0 +1,72 @@
+{
+  "parent_id": "T32_large_seed0",
+  "direction_repeat": 0,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31994153088,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T32_large_seed0_repeat0_M12_random_64_OLS4_abs",
+  "method": "random_64_gaussian_ols_abs",
+  "status": "complete",
+  "training_repeat": 4,
+  "training_samples": 1048576,
+  "normalization": "absolute",
+  "wall_seconds_fit": 0.35221540000929963,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      169144772974.77808,
+      58782356243.0724,
+      392093185417.91846
+    ],
+    "target_scale": 128147639860.52025,
+    "scaled_singular_values": [
+      1.0028738790132687,
+      0.9999998046971368,
+      0.9971180338351981
+    ],
+    "scaled_design_condition": 1.0057724812737887,
+    "raw_design_condition": 6.670368539331479,
+    "training_nmse": 0.00020942705552807073,
+    "normal_equation_relative_residual": 2.0017042075745974e-13,
+    "max_leverage": 0.8614556308702612,
+    "max_label_energy_share": 0.7150182484237612,
+    "top_one_percent_label_energy_share": 0.9999948203405361,
+    "lstsq_crosscheck_relative_error": 2.1270774882141328e-13
+  },
+  "logical_learning_queries": 31995202054,
+  "per_layer_errors": [
+    0.013037289900738687,
+    0.02539181496458079
+  ],
+  "per_layer_frobenius_errors": [
+    0.01800765566675471,
+    0.034511686123059916
+  ],
+  "output_l1_error": 0.0691904179805764,
+  "max_weight_operator_error": 0.02539181496458079,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      0,
+      2,
+      1
+    ]
+  ],
+  "parameter_success": true,
+  "joint_parameter_error": 0.0691904179805764,
+  "coefficient_l1_norm": 1.018207186340004,
+  "coefficients_raw": [
+    0.35970627129119775,
+    0.3078417175130471,
+    0.3506591975357591
+  ],
+  "minimum_hidden_weight": 0.009594611752370249,
+  "angular_gaussian_nmse": 0.0008099567840718553
+}

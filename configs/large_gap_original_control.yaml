@@ -1,0 +1,24 @@
+experiment_name: large_gap_original_control
+seeds:
+- 0
+- 1
+teacher:
+  kappa0_max: 4
+  mu_min: 0.25
+sampler:
+  chains: 2
+  burn_in: 256
+  thin: 2
+oracle:
+  max_real_learning_queries: 10000000
+  wall_seconds: 1800
+recovery:
+  moment_samples_by_layer:
+  - 16384
+diagnostic:
+  reference_directions: 0
+sweep:
+- kind: single_layer
+  oracle.mode: true_suffix_debug
+- kind: recovery
+  oracle.mode: strict_real

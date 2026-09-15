@@ -1,0 +1,33 @@
+{
+  "python": "3.10.21",
+  "versions": {
+    "numpy": "1.26.4",
+    "scipy": "1.13.1",
+    "mpmath": "1.3.0",
+    "matplotlib": "3.8.4",
+    "PyYAML": "6.0.1",
+    "pytest": "7.4.4",
+    "torch": null
+  },
+  "implementation_hash": "0c7c150a213d3206b7a1f3b2febabb0e700df4aea935df5eea0015c15063584b",
+  "computation_seconds": 36.00646410000627,
+  "report_build": {
+    "seconds": 7.054341800001566,
+    "figure_files": 12,
+    "new_oracle_queries": 0
+  },
+  "records": 55,
+  "reference_verification": {
+    "matched_records": 30,
+    "maximum_metric_difference": 5.551115123125783e-15,
+    "absolute_tolerance": 1e-07,
+    "passed": true
+  },
+  "physical_queries": {
+    "first_layer": 0,
+    "hessian_training": 1950,
+    "hessian_validation": 900,
+    "gaussian_labels": 5242880,
+    "prediction_evaluation": 20000
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "parent_id": "T32_large_seed0",
+  "direction_repeat": 3,
+  "matrix_count": 3,
+  "method": "random_1",
+  "run_id": "T32_large_seed0_repeat3_M3_random_1",
+  "status": "complete",
+  "parameter_success": false,
+  "prefix_source_mode": "inherited_checkpoint",
+  "inherited_prefix_queries": 31994153088,
+  "logical_hessian_queries": 120,
+  "per_layer_errors": [
+    0.013037289900738687,
+    0.038824091921662675
+  ],
+  "per_layer_frobenius_errors": [
+    0.01800765566675471,
+    0.0445713275483487
+  ],
+  "output_l1_error": 0.15425432658511795,
+  "max_weight_operator_error": 0.038824091921662675,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      2,
+      0
+    ]
+  ],
+  "joint_parameter_error": 0.15425432658511795,
+  "coefficient_l1_norm": 1.0024362630494554,
+  "coefficients_raw": [
+    0.26181573282143733,
+    0.4116786281506201,
+    0.32894190207739815
+  ],
+  "minimum_hidden_weight": -0.012638555412213641,
+  "angular_gaussian_nmse": 0.010815852125879108,
+  "hessian_diagnostics": {
+    "index": 0,
+    "eigenvalues": [
+      -0.8970636509784221,
+      -0.6890475179898428,
+      -0.5266066939411589
+    ],
+    "absolute_gap": 0.16244082404868387,
+    "relative_gap": 0.16244082404868387,
+    "status": "complete",
+    "joint_residual": 0.0007702048233009137,
+    "signal_residual": 0.0063663265160128135,
+    "offdiagonal_norm": 0.0028682597222666616,
+    "signal_norm": 0.4505360689641525,
+    "metric_orthogonality_error": 9.252582499277e-16,
+    "generalized_equation_residual": 4.0551934698430405e-17,
+    "method": "random_combination",
+    "selection": "first",
+    "selected_index": 0,
+    "candidates": [
+      {
+        "index": 0,
+        "eigenvalues": [
+          -0.8970636509784221,
+          -0.6890475179898428,
+          -0.5266066939411589
+        ],
+        "absolute_gap": 0.16244082404868387,
+        "relative_gap": 0.16244082404868387,
+        "status": "complete",
+        "joint_residual": 0.0007702048233009137,
+        "signal_residual": 0.0063663265160128135,
+        "offdiagonal_norm": 0.0028682597222666616,
+        "signal_norm": 0.4505360689641525,
+        "metric_orthogonality_error": 9.252582499277e-16,
+        "generalized_equation_residual": 4.0551934698430405e-17
+      }
+    ],
+    "candidate_count": 1,
+    "failed_candidates": 0,
+    "final_gap": 0.16244082404868387,
+    "final_condition": 2.8533228663275065,
+    "hessian2_eigenvalues": [
+      1.4771214111694146,
+      3.34423797529513,
+      4.214704298831646
+    ],
+    "final_eigenvalues": [
+      -0.8970636509784221,
+      -0.6890475179898428,
+      -0.5266066939411589
+    ],
+    "probe_eigenvalues": [
+      [
+        1.269547970566886,
+        2.77509188463823,
+        5.1414877129685586
+      ],
+      [
+        1.791474789007928,
+        4.123504024224073,
+        5.36523113487259
+      ],
+      [
+        1.6213545132656284,
+        3.2307200804655487,
+        4.239988994100056
+      ]
+    ],
+    "nonpositive_probe_count": 0,
+    "max_commutator": 0.00022600257115034799,
+    "matrix_asymmetry": 0.0,
+    "anchor_asymmetry": 0.0,
+    "outside_subspace_residual": 0.0,
+    "minimum_weight_entry": -0.012638555412213641,
+    "negative_weight_entries": 1,
+    "normalization": "whole_column_sign_and_column_sum",
+    "coefficient_offdiagonal_residual": 2.515184223574309e-16,
+    "coefficient_scale_identity_error": 4.80740671595891e-16,
+    "hessian_reconstruction_residual": 6.47953687235977e-16
+  },
+  "heldout_diagnostics": {
+    "joint_residual": 0.0008865189870310052,
+    "signal_residual": 0.006656462636936428,
+    "offdiagonal_norm": 0.004064317349434272,
+    "signal_norm": 0.6105821621955102,
+    "metric_orthogonality_error": 9.252582499277e-16
+  },
+  "logical_learning_queries": 31994153208
+}

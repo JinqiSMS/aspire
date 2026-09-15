@@ -1,0 +1,18 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: passive_baselines
+kind: baselines
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+evaluation:
+  gaussian_test_points: 1000
+  gaussian_batches: 2
+  angular_risk_directions: 1000
+  angular_risk_batches: 2
+sweep:
+- baseline.label_budget: 128
+- baseline.label_budget: 512
+- baseline.label_budget: 2048

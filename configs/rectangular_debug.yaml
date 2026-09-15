@@ -1,0 +1,22 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: rectangular_debug
+kind: single_layer
+architecture:
+  d: 12
+  hidden_widths:
+  - 5
+  - 4
+  - 3
+oracle:
+  mode: true_suffix_debug
+diagnostic:
+  layer: 2
+  reference_directions: 4096
+sampler:
+  xi_by_layer:
+  - 0.0
+  - 0.0
+recovery:
+  moment_samples_by_layer:
+  - 256
+  - 1024

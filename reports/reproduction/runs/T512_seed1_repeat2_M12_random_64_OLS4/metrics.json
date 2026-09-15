@@ -1,0 +1,72 @@
+{
+  "parent_id": "T512_seed1",
+  "direction_repeat": 2,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31191992448,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T512_seed1_repeat2_M12_random_64_OLS4",
+  "method": "random_64_gaussian_ols",
+  "status": "complete",
+  "training_repeat": 4,
+  "training_samples": 1048576,
+  "normalization": "signed",
+  "wall_seconds_fit": 0.29904810000152793,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      55203769781.70193,
+      261157626787.09137,
+      37377764440612.25
+    ],
+    "target_scale": 54286932320.89863,
+    "scaled_singular_values": [
+      1.134433051479272,
+      0.9999999967172449,
+      0.8444297829175235
+    ],
+    "scaled_design_condition": 1.343430886058733,
+    "raw_design_condition": 706.8092947236307,
+    "training_nmse": 0.049273190069860216,
+    "normal_equation_relative_residual": 3.641001214100525e-13,
+    "max_leverage": 0.5218498898026914,
+    "max_label_energy_share": 0.3942466234583636,
+    "top_one_percent_label_energy_share": 0.9999841790747803,
+    "lstsq_crosscheck_relative_error": 2.9838489844109507e-13
+  },
+  "logical_learning_queries": 31193041414,
+  "per_layer_errors": [
+    0.11258445437469042,
+    4.405155564234106
+  ],
+  "per_layer_frobenius_errors": [
+    0.15601897161423997,
+    4.405338182672489
+  ],
+  "output_l1_error": 0.583143431888415,
+  "max_weight_operator_error": 4.405155564234106,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      2
+    ]
+  ],
+  "parameter_success": false,
+  "joint_parameter_error": 4.405155564234106,
+  "coefficient_l1_norm": 0.8304352040123827,
+  "coefficients_raw": [
+    0.5401226512837322,
+    0.28990917346667217,
+    0.0004033792619782561
+  ],
+  "minimum_hidden_weight": -3.0148159427624006,
+  "angular_gaussian_nmse": 0.09028840785408788
+}

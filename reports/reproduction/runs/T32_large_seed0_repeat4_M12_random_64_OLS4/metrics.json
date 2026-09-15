@@ -1,0 +1,72 @@
+{
+  "parent_id": "T32_large_seed0",
+  "direction_repeat": 4,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31994153088,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T32_large_seed0_repeat4_M12_random_64_OLS4",
+  "method": "random_64_gaussian_ols",
+  "status": "complete",
+  "training_repeat": 4,
+  "training_samples": 1048576,
+  "normalization": "signed",
+  "wall_seconds_fit": 0.3189254000026267,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      60017881914.90709,
+      166988629290.12,
+      423035398773.33093
+    ],
+    "target_scale": 128147639860.52025,
+    "scaled_singular_values": [
+      1.0027765163101476,
+      0.9999998460413944,
+      0.9972159075420226
+    ],
+    "scaled_design_condition": 1.0055761332386193,
+    "raw_design_condition": 7.048602764328909,
+    "training_nmse": 0.00020301840298288948,
+    "normal_equation_relative_residual": 1.9544587805680388e-13,
+    "max_leverage": 0.8616377417162697,
+    "max_label_energy_share": 0.7150182484237612,
+    "top_one_percent_label_energy_share": 0.9999948203405361,
+    "lstsq_crosscheck_relative_error": 1.985218963589222e-13
+  },
+  "logical_learning_queries": 31995202054,
+  "per_layer_errors": [
+    0.013037289900738687,
+    0.036210544642825186
+  ],
+  "per_layer_frobenius_errors": [
+    0.01800765566675471,
+    0.041795416407193677
+  ],
+  "output_l1_error": 0.07118140154881747,
+  "max_weight_operator_error": 0.036210544642825186,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      2,
+      0
+    ]
+  ],
+  "parameter_success": true,
+  "joint_parameter_error": 0.07118140154881747,
+  "coefficient_l1_norm": 0.9908607339878942,
+  "coefficients_raw": [
+    0.3014857213998524,
+    0.3643544011016892,
+    0.32502061148635264
+  ],
+  "minimum_hidden_weight": -0.010329980391499087,
+  "angular_gaussian_nmse": 0.0008106114476697079
+}

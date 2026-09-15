@@ -1,0 +1,13 @@
+configs:
+- single_layer_debug.yaml
+- sample_scaling.yaml
+- dimension_scaling.yaml
+- width_scaling.yaml
+- activation_scaling.yaml
+- intermediate_small.yaml
+- rectangular_strict.yaml
+- prefix_error.yaml
+- gap_ablation.yaml
+- sampling_ablation.yaml
+- numerical_ablation.yaml
+- passive_baselines.yaml

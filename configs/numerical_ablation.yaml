@@ -1,0 +1,19 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: numerical_ablation
+evaluation:
+  gaussian_test_points: 1000
+  gaussian_batches: 2
+  angular_risk_directions: 1000
+  angular_risk_batches: 2
+sweep:
+- oracle.backend: float64
+- oracle.backend: mpmath
+  oracle.dps: 80
+- oracle.backend: mpmath
+  oracle.dps: 110
+- recovery.reduced_gradient_step_factor: 0.25
+- recovery.reduced_gradient_step_factor: 1.0
+- final_layer.tau_fin: 0.05
+- final_layer.tau_fin: 0.1
+- final_layer.tau_fin: 0.4
+- final_layer.perturbation_candidates: 3

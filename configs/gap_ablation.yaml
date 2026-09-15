@@ -1,0 +1,28 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: gap_ablation
+kind: single_layer
+oracle:
+  mode: true_suffix_debug
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+recovery:
+  moment_samples_by_layer:
+  - 1024
+sweep:
+- teacher.family: weak_coupling
+  teacher.t_scale: 0.001
+- teacher.family: weak_coupling
+  teacher.t_scale: 0.01
+- teacher.family: weak_coupling
+  teacher.t_scale: 0.1
+- teacher.family: symmetric
+  teacher.symmetric_beta: 0.05
+- teacher.family: symmetric
+  teacher.symmetric_beta: 0.2
+- teacher.family: symmetric
+  teacher.symmetric_beta: 0.5
+- teacher.family: positive_partition

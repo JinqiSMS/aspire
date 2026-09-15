@@ -1,0 +1,22 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: rectangular_strict
+architecture:
+  d: 12
+  hidden_widths:
+  - 5
+  - 4
+  - 3
+oracle:
+  backend: mpmath
+  max_real_learning_queries: 40000000
+  wall_seconds: 7200
+sampler:
+  xi_by_layer:
+  - 0.0
+  - 0.0001
+  xi_source: configured_empirical
+evaluation:
+  gaussian_test_points: 1000
+  gaussian_batches: 2
+  angular_risk_directions: 1000
+  angular_risk_batches: 2

@@ -1,0 +1,72 @@
+{
+  "parent_id": "T512_seed1",
+  "direction_repeat": 2,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31191992448,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T512_seed1_repeat2_M12_random_64_OLS2_abs",
+  "method": "random_64_gaussian_ols_abs",
+  "status": "complete",
+  "training_repeat": 2,
+  "training_samples": 1048576,
+  "normalization": "absolute",
+  "wall_seconds_fit": 0.33178639999823645,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      64383751946.606606,
+      117005906443.21622,
+      15740957462.769922
+    ],
+    "target_scale": 29230273918.124645,
+    "scaled_singular_values": [
+      1.1836494249041252,
+      0.999999991773302,
+      0.773934141499578
+    ],
+    "scaled_design_condition": 1.5293929566289468,
+    "raw_design_condition": 8.15520724359053,
+    "training_nmse": 0.04091603339670382,
+    "normal_equation_relative_residual": 3.8621072400977493e-13,
+    "max_leverage": 0.522563557711818,
+    "max_label_energy_share": 0.3247290112553536,
+    "top_one_percent_label_energy_share": 0.9999560716406629,
+    "lstsq_crosscheck_relative_error": 3.1325554216804916e-13
+  },
+  "logical_learning_queries": 31193041414,
+  "per_layer_errors": [
+    0.11258445437469042,
+    0.3762552095151158
+  ],
+  "per_layer_frobenius_errors": [
+    0.15601897161423997,
+    0.376623843060396
+  ],
+  "output_l1_error": 0.8482225258915819,
+  "max_weight_operator_error": 0.3762552095151158,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      2
+    ]
+  ],
+  "parameter_success": false,
+  "joint_parameter_error": 0.8482225258915819,
+  "coefficient_l1_norm": 1.708406975702,
+  "coefficients_raw": [
+    0.26342555823854247,
+    0.35304634222207565,
+    1.091935075241382
+  ],
+  "minimum_hidden_weight": 0.023080096579748237,
+  "angular_gaussian_nmse": 0.05056297849325889
+}

@@ -1,0 +1,72 @@
+{
+  "parent_id": "T512_seed1",
+  "direction_repeat": 1,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31191992448,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T512_seed1_repeat1_M12_random_64_OLS3",
+  "method": "random_64_gaussian_ols",
+  "status": "complete",
+  "training_repeat": 3,
+  "training_samples": 1048576,
+  "normalization": "signed",
+  "wall_seconds_fit": 0.31366080000589136,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      112534239826.3207,
+      176401625218.92023,
+      7859271612208.697
+    ],
+    "target_scale": 49336903490.784966,
+    "scaled_singular_values": [
+      1.2023214219977505,
+      0.9999999815625217,
+      0.7445960213975534
+    ],
+    "scaled_design_condition": 1.6147298500750504,
+    "raw_design_condition": 78.01426205320203,
+    "training_nmse": 0.039640502966220924,
+    "normal_equation_relative_residual": 2.3001235832266167e-13,
+    "max_leverage": 0.8531220577528987,
+    "max_label_energy_share": 0.4095504407963546,
+    "top_one_percent_label_energy_share": 0.9999812366942531,
+    "lstsq_crosscheck_relative_error": 1.9716145331458745e-13
+  },
+  "logical_learning_queries": 31193041414,
+  "per_layer_errors": [
+    0.11258445437469042,
+    2.7281904290631585
+  ],
+  "per_layer_frobenius_errors": [
+    0.15601897161423997,
+    2.7286497434856645
+  ],
+  "output_l1_error": 0.42661425370928735,
+  "max_weight_operator_error": 2.7281904290631585,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      2
+    ]
+  ],
+  "parameter_success": false,
+  "joint_parameter_error": 2.7281904290631585,
+  "coefficient_l1_norm": 0.6626127476426464,
+  "coefficients_raw": [
+    0.37794683400930024,
+    0.28169675839744157,
+    0.002969155235904604
+  ],
+  "minimum_hidden_weight": -1.8260553585495969,
+  "angular_gaussian_nmse": 0.05190919708861517
+}

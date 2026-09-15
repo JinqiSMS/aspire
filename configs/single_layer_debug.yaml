@@ -1,0 +1,18 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: single_layer_debug
+kind: single_layer
+oracle:
+  mode: true_suffix_debug
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+sweep:
+- recovery.moment_samples_by_layer:
+  - 256
+- recovery.moment_samples_by_layer:
+  - 1024
+- recovery.moment_samples_by_layer:
+  - 4096

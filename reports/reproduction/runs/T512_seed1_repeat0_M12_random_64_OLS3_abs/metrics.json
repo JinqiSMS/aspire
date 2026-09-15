@@ -1,0 +1,72 @@
+{
+  "parent_id": "T512_seed1",
+  "direction_repeat": 0,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31191992448,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T512_seed1_repeat0_M12_random_64_OLS3_abs",
+  "method": "random_64_gaussian_ols_abs",
+  "status": "complete",
+  "training_repeat": 3,
+  "training_samples": 1048576,
+  "normalization": "absolute",
+  "wall_seconds_fit": 0.3294108999980381,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      19719247752.710403,
+      136993830953.62274,
+      112522528028.16963
+    ],
+    "target_scale": 49336903490.784966,
+    "scaled_singular_values": [
+      1.1638096880309179,
+      0.9999999653861206,
+      0.8034594446978103
+    ],
+    "scaled_design_condition": 1.4484983600742154,
+    "raw_design_condition": 7.44430131233873,
+    "training_nmse": 0.02690289634811471,
+    "normal_equation_relative_residual": 1.9097176184370658e-13,
+    "max_leverage": 0.8531597934376736,
+    "max_label_energy_share": 0.4095504407963546,
+    "top_one_percent_label_energy_share": 0.9999812366942531,
+    "lstsq_crosscheck_relative_error": 1.4674218348955285e-13
+  },
+  "logical_learning_queries": 31193041414,
+  "per_layer_errors": [
+    0.11258445437469042,
+    0.31939459472019466
+  ],
+  "per_layer_frobenius_errors": [
+    0.15601897161423997,
+    0.3201449875124348
+  ],
+  "output_l1_error": 0.9840775764600612,
+  "max_weight_operator_error": 0.31939459472019466,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      2,
+      0
+    ]
+  ],
+  "parameter_success": false,
+  "joint_parameter_error": 0.9840775764600612,
+  "coefficient_l1_norm": 1.984077576460061,
+  "coefficients_raw": [
+    1.2271908369179303,
+    0.3627403189971198,
+    0.39414642054501103
+  ],
+  "minimum_hidden_weight": 0.025066467269066497,
+  "angular_gaussian_nmse": 0.04911681990886
+}

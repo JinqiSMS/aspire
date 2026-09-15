@@ -1,0 +1,52 @@
+experiment_name: large_gap_0
+architecture:
+  d: 8
+  hidden_widths:
+  - 3
+  - 3
+  k: 4
+teacher:
+  family: frozen
+  instance_path: instances\large_gap\instance_0.json
+  instance_sha256: fa14e7a58cc363d0070c4ac7f71b771906c3666d61cab34288b806e09b62274d
+  kappa0_max: 4
+  mu_min: 0.25
+seeds:
+- 0
+- 1
+oracle:
+  max_real_learning_queries: 10000000
+  wall_seconds: 1800
+sampler:
+  chains: 2
+  burn_in: 256
+  thin: 2
+diagnostic:
+  reference_directions: 0
+evaluation:
+  parameter_delta: 0.1
+sweep:
+- kind: single_layer
+  oracle.mode: true_suffix_debug
+  recovery.moment_samples_by_layer:
+  - 1024
+- kind: single_layer
+  oracle.mode: true_suffix_debug
+  recovery.moment_samples_by_layer:
+  - 4096
+- kind: single_layer
+  oracle.mode: true_suffix_debug
+  recovery.moment_samples_by_layer:
+  - 16384
+- kind: recovery
+  oracle.mode: strict_real
+  recovery.moment_samples_by_layer:
+  - 1024
+- kind: recovery
+  oracle.mode: strict_real
+  recovery.moment_samples_by_layer:
+  - 4096
+- kind: recovery
+  oracle.mode: strict_real
+  recovery.moment_samples_by_layer:
+  - 16384

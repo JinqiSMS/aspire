@@ -1,0 +1,72 @@
+{
+  "parent_id": "T512_seed1",
+  "direction_repeat": 3,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31191992448,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T512_seed1_repeat3_M12_random_64_OLS2_abs",
+  "method": "random_64_gaussian_ols_abs",
+  "status": "complete",
+  "training_repeat": 2,
+  "training_samples": 1048576,
+  "normalization": "absolute",
+  "wall_seconds_fit": 0.30025490000844,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      97030916142.9991,
+      60510157946.074745,
+      15684627865.124184
+    ],
+    "target_scale": 29230273918.124645,
+    "scaled_singular_values": [
+      1.1422223154762048,
+      0.9999998510085307,
+      0.8338635859733522
+    ],
+    "scaled_design_condition": 1.3697951735629654,
+    "raw_design_condition": 6.516691049889087,
+    "training_nmse": 0.041092899284874064,
+    "normal_equation_relative_residual": 3.681543527012634e-13,
+    "max_leverage": 0.5233913653649741,
+    "max_label_energy_share": 0.3247290112553536,
+    "top_one_percent_label_energy_share": 0.9999560716406629,
+    "lstsq_crosscheck_relative_error": 3.4509857980990203e-13
+  },
+  "logical_learning_queries": 31193041414,
+  "per_layer_errors": [
+    0.11258445437469042,
+    0.36141540170261843
+  ],
+  "per_layer_frobenius_errors": [
+    0.15601897161423997,
+    0.36718206520143426
+  ],
+  "output_l1_error": 0.8340969888402159,
+  "max_weight_operator_error": 0.36141540170261843,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      2
+    ]
+  ],
+  "parameter_success": false,
+  "joint_parameter_error": 0.8340969888402159,
+  "coefficient_l1_norm": 1.7894140248443682,
+  "coefficients_raw": [
+    0.42571673027271184,
+    0.3109918513354095,
+    1.0527054432362468
+  ],
+  "minimum_hidden_weight": 0.03789368855790488,
+  "angular_gaussian_nmse": 0.050646082947013345
+}

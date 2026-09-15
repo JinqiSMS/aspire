@@ -1,0 +1,72 @@
+{
+  "parent_id": "T32_large_seed0",
+  "direction_repeat": 2,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31994153088,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T32_large_seed0_repeat2_M12_random_64_OLS2",
+  "method": "random_64_gaussian_ols",
+  "status": "complete",
+  "training_repeat": 2,
+  "training_samples": 1048576,
+  "normalization": "signed",
+  "wall_seconds_fit": 0.3613377000001492,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      259105134893.58548,
+      135445829289.6114,
+      161279965258.62607
+    ],
+    "target_scale": 77260075709.52672,
+    "scaled_singular_values": [
+      1.0016865188740403,
+      0.999996229629497,
+      0.998314408707887
+    ],
+    "scaled_design_condition": 1.0033778037627623,
+    "raw_design_condition": 1.9129867658229767,
+    "training_nmse": 0.00041286306409111926,
+    "normal_equation_relative_residual": 8.482927067625804e-13,
+    "max_leverage": 0.970583853217162,
+    "max_label_energy_share": 0.5268951753840054,
+    "top_one_percent_label_energy_share": 0.9999900910820235,
+    "lstsq_crosscheck_relative_error": 8.447579480626932e-13
+  },
+  "logical_learning_queries": 31995202054,
+  "per_layer_errors": [
+    0.013037289900738687,
+    0.03595633232470046
+  ],
+  "per_layer_frobenius_errors": [
+    0.01800765566675471,
+    0.041556260945224674
+  ],
+  "output_l1_error": 0.0740001211160915,
+  "max_weight_operator_error": 0.03595633232470046,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      2,
+      0
+    ]
+  ],
+  "parameter_success": true,
+  "joint_parameter_error": 0.0740001211160915,
+  "coefficient_l1_norm": 0.9909894835667421,
+  "coefficients_raw": [
+    0.3019871840437983,
+    0.36582813567475014,
+    0.32317416384819364
+  ],
+  "minimum_hidden_weight": -0.010829426000654837,
+  "angular_gaussian_nmse": 0.0008102172142676684
+}

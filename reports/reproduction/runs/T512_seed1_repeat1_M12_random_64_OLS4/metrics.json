@@ -1,0 +1,72 @@
+{
+  "parent_id": "T512_seed1",
+  "direction_repeat": 1,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31191992448,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T512_seed1_repeat1_M12_random_64_OLS4",
+  "method": "random_64_gaussian_ols",
+  "status": "complete",
+  "training_repeat": 4,
+  "training_samples": 1048576,
+  "normalization": "signed",
+  "wall_seconds_fit": 0.30972689999907743,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      55171114012.99682,
+      271561059252.59616,
+      8296392545021.023
+    ],
+    "target_scale": 54286932320.89863,
+    "scaled_singular_values": [
+      1.0830948033594832,
+      0.9999999906166103,
+      0.9093435355813034
+    ],
+    "scaled_design_condition": 1.191073297361825,
+    "raw_design_condition": 152.68053081629628,
+    "training_nmse": 0.04721585478407432,
+    "normal_equation_relative_residual": 3.385559057963469e-13,
+    "max_leverage": 0.5219678663512877,
+    "max_label_energy_share": 0.3942466234583636,
+    "top_one_percent_label_energy_share": 0.9999841790747803,
+    "lstsq_crosscheck_relative_error": 3.070011270901587e-13
+  },
+  "logical_learning_queries": 31193041414,
+  "per_layer_errors": [
+    0.11258445437469042,
+    2.7281904290631585
+  ],
+  "per_layer_frobenius_errors": [
+    0.15601897161423997,
+    2.7286497434856645
+  ],
+  "output_l1_error": 0.6236749579891907,
+  "max_weight_operator_error": 2.7281904290631585,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      2
+    ]
+  ],
+  "parameter_success": false,
+  "joint_parameter_error": 2.7281904290631585,
+  "coefficient_l1_norm": 0.8516101374074692,
+  "coefficients_raw": [
+    0.5709758810316632,
+    0.278800343703651,
+    0.0018339126721548908
+  ],
+  "minimum_hidden_weight": -1.8260553585495969,
+  "angular_gaussian_nmse": 0.08611269258237049
+}

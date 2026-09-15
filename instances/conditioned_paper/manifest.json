@@ -1,0 +1,174 @@
+{
+  "selection": "candidates 15 and 1586 proposed before any new learner run; 15 is primary",
+  "source_sha256": "28b1f1de3cadccc7c78bac6b6cae3680a433106deeb256ef50c439d667b20845",
+  "candidate_ids": [
+    15,
+    1586
+  ],
+  "instances": [
+    {
+      "index": 0,
+      "candidate": 15,
+      "algebra": {
+        "condition_numbers": [
+          1.0,
+          1.551827709544387
+        ],
+        "mu_actual": 1.0,
+        "row_balance": [
+          1.0,
+          1.0
+        ],
+        "minimum_elements": [
+          0.0,
+          0.005,
+          0.3333333333333333
+        ],
+        "column_normalization_error": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "kappa_actual": 1.551827709544387,
+        "gap_certificate": "not_certified"
+      },
+      "population_checks": [
+        {
+          "order": 64,
+          "rotation": 8128,
+          "theta": [
+            2.216102598428571,
+            2.15409722732181,
+            2.0933716414922903
+          ],
+          "relative_gap": 0.027401974020778624,
+          "offdiagonal_position": 1.1039988164503186e-09,
+          "offdiagonal_gradient": 6.070054579390861e-07
+        },
+        {
+          "order": 128,
+          "rotation": 8128,
+          "theta": [
+            2.2161027897552703,
+            2.154097222992952,
+            2.0933711902681806
+          ],
+          "relative_gap": 0.027402173313214095,
+          "offdiagonal_position": 2.2176276125275465e-14,
+          "offdiagonal_gradient": 5.730368458847613e-12
+        },
+        {
+          "order": 256,
+          "rotation": 1729,
+          "theta": [
+            2.216102789756857,
+            2.1540972229928523,
+            2.093371190269158
+          ],
+          "relative_gap": 0.027402173312708524,
+          "offdiagonal_position": 7.0546412996255375e-15,
+          "offdiagonal_gradient": 7.90900252360619e-15
+        }
+      ],
+      "hessian2_eigenvalues": [
+        1.661012828075843,
+        3.208387171924157,
+        4.0
+      ],
+      "hessian2_condition": 2.4081692401097796,
+      "instance_sha256": "059e7dce127f3c86661a3040e45e233806b383fa67c58c681f4c9c478d085087"
+    },
+    {
+      "index": 1,
+      "candidate": 1586,
+      "algebra": {
+        "condition_numbers": [
+          1.0,
+          1.6999993050052635
+        ],
+        "mu_actual": 0.5835393306155404,
+        "row_balance": [
+          0.7402725237443987,
+          0.5835393306155404
+        ],
+        "minimum_elements": [
+          0.0,
+          0.010001138846628555,
+          0.19451311020518014
+        ],
+        "column_normalization_error": [
+          0.0,
+          2.220446049250313e-16,
+          1.1102230246251565e-16
+        ],
+        "kappa_actual": 1.6999993050052635,
+        "gap_certificate": "not_certified"
+      },
+      "population_checks": [
+        {
+          "order": 64,
+          "rotation": 8128,
+          "theta": [
+            2.050920615126162,
+            2.1338083515979553,
+            2.2020785579626616
+          ],
+          "relative_gap": 0.031002620736595835,
+          "offdiagonal_position": 5.345997507520331e-10,
+          "offdiagonal_gradient": 5.49920171084068e-08
+        },
+        {
+          "order": 128,
+          "rotation": 8128,
+          "theta": [
+            2.0509206269805587,
+            2.133808416960671,
+            2.2020784125226114
+          ],
+          "relative_gap": 0.03100252705521645,
+          "offdiagonal_position": 1.982300240326076e-14,
+          "offdiagonal_gradient": 5.501150526493738e-13
+        },
+        {
+          "order": 256,
+          "rotation": 1729,
+          "theta": [
+            2.0509206269809237,
+            2.1338084169607145,
+            2.2020784125224524
+          ],
+          "relative_gap": 0.03100252705512673,
+          "offdiagonal_position": 8.157601856308058e-15,
+          "offdiagonal_gradient": 8.400199519891246e-15
+        }
+      ],
+      "hessian2_eigenvalues": [
+        1.4112625133047734,
+        2.892160567975935,
+        4.04200084540143
+      ],
+      "hessian2_condition": 2.8641027500519525,
+      "instance_sha256": "3980cee9e0293e181432518f2b2013b360794d85a76b0b79f3bcc3493699503a"
+    }
+  ],
+  "sampling_plan": {
+    "pilot_steps": [
+      32,
+      128
+    ],
+    "pilot_count": 8192,
+    "main_steps": 128,
+    "main_counts": [
+      65536,
+      262144,
+      1048576
+    ],
+    "seeds": [
+      0,
+      1
+    ],
+    "final_candidates": 1,
+    "tau": 0.2
+  },
+  "claim": "empirical mixing and numerical population checks, not a certified theorem budget"
+}

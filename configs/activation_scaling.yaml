@@ -1,0 +1,17 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: activation_scaling
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+evaluation:
+  gaussian_test_points: 1000
+  gaussian_batches: 2
+  angular_risk_directions: 1000
+  angular_risk_batches: 2
+sweep:
+- architecture.k: 4
+- architecture.k: 6
+- architecture.k: 8

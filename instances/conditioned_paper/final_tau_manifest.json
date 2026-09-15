@@ -1,0 +1,21 @@
+{
+  "scope": "post-main exploratory constant ablation, declared before these new evaluations",
+  "taus": [
+    0.1,
+    0.4,
+    0.6
+  ],
+  "seeds": [
+    0,
+    1
+  ],
+  "one_direction_per_tau": true,
+  "same_direction_for_all_taus": true,
+  "truth_selection": false,
+  "parents": [
+    "results\\conditioned_paper_extended_0\\seed_0_25e8a3f814b2_3cea4433",
+    "results\\conditioned_paper_extended_0\\seed_1_c70313ee57c7_3cea4433"
+  ],
+  "script_sha256": "d27121bd136a2a69577f3a5222089e09ad769714f3b51c5bf1531016949c6823",
+  "implementation_hash": "3cea4433c80a4b0943d5e526a7143c924f4bba0288e2ea3c2e1053c29ad78cca"
+}

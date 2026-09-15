@@ -1,0 +1,43 @@
+{
+  "source": "Fresh export of staged Git files with checkout attributes; no existing result cache",
+  "python": "3.10.21",
+  "commands": [
+    {
+      "arguments": [
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "--junitxml=reports/clean_tests.xml"
+      ],
+      "returncode": 0,
+      "seconds": 10.677655499996035
+    },
+    {
+      "arguments": [
+        "reproduce.py",
+        "--preset",
+        "best",
+        "--mode",
+        "checkpoint",
+        "--verify-reference"
+      ],
+      "returncode": 0,
+      "seconds": 47.38640010000381
+    }
+  ],
+  "reference_verification": {
+    "matched_records": 30,
+    "maximum_metric_difference": 5.551115123125783e-15,
+    "absolute_tolerance": 1e-07,
+    "passed": true
+  },
+  "physical_queries": {
+    "first_layer": 0,
+    "hessian_training": 1950,
+    "hessian_validation": 900,
+    "gaussian_labels": 5242880,
+    "prediction_evaluation": 20000
+  },
+  "passed": true
+}

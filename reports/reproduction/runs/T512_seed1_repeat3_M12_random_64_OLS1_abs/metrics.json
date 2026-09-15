@@ -1,0 +1,72 @@
+{
+  "parent_id": "T512_seed1",
+  "direction_repeat": 3,
+  "matrix_count": 12,
+  "inherited_prefix_queries": 31191992448,
+  "logical_hessian_queries": 390,
+  "prefix_source_mode": "inherited_checkpoint",
+  "run_id": "T512_seed1_repeat3_M12_random_64_OLS1_abs",
+  "method": "random_64_gaussian_ols_abs",
+  "status": "complete",
+  "training_repeat": 1,
+  "training_samples": 1048576,
+  "normalization": "absolute",
+  "wall_seconds_fit": 0.3163291999953799,
+  "regression_diagnostics": {
+    "rank": 3,
+    "column_scales": [
+      126451628744.08464,
+      73052928704.85977,
+      39291272320.814476
+    ],
+    "target_scale": 46950616901.86241,
+    "scaled_singular_values": [
+      1.0777164026429882,
+      0.9999988989611652,
+      0.9157125954969965
+    ],
+    "scaled_design_condition": 1.1769155605619526,
+    "raw_design_condition": 3.2781158242142348,
+    "training_nmse": 0.06423483869036713,
+    "normal_equation_relative_residual": 3.6090377138294397e-13,
+    "max_leverage": 0.7871950339872292,
+    "max_label_energy_share": 0.40389807675072825,
+    "top_one_percent_label_energy_share": 0.9999794122587983,
+    "lstsq_crosscheck_relative_error": 3.876395488160151e-13
+  },
+  "logical_learning_queries": 31193041414,
+  "per_layer_errors": [
+    0.11258445437469042,
+    0.36141540170261843
+  ],
+  "per_layer_frobenius_errors": [
+    0.15601897161423997,
+    0.36718206520143426
+  ],
+  "output_l1_error": 0.7491501216542682,
+  "max_weight_operator_error": 0.36141540170261843,
+  "first_subspace_error": 0.0,
+  "alignment_method": "sequential_hungarian",
+  "alignment_permutations": [
+    [
+      2,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      2
+    ]
+  ],
+  "parameter_success": false,
+  "joint_parameter_error": 0.7491501216542682,
+  "coefficient_l1_norm": 1.7154373507201812,
+  "coefficients_raw": [
+    0.41827539936977454,
+    0.3164769478662899,
+    0.9806850034841168
+  ],
+  "minimum_hidden_weight": 0.03789368855790488,
+  "angular_gaussian_nmse": 0.0535328795497745
+}

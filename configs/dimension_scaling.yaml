@@ -1,0 +1,18 @@
+# Experimental choices; not theorem-certified constants.
+experiment_name: dimension_scaling
+seeds:
+- 0
+- 1
+- 2
+- 3
+- 4
+evaluation:
+  gaussian_test_points: 1000
+  gaussian_batches: 2
+  angular_risk_directions: 1000
+  angular_risk_batches: 2
+sweep:
+- architecture.d: 8
+- architecture.d: 16
+- architecture.d: 32
+- architecture.d: 64
