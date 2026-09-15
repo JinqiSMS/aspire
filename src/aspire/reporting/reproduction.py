@@ -8,6 +8,7 @@ import time
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import numpy as np
 
 from ..io import write_json
@@ -36,7 +37,12 @@ def aggregate(rows):
 def save_figure(figure, folder, name):
     figure.tight_layout()
     for extension in ("png", "pdf", "svg"):
-        figure.savefig(folder / f"{name}.{extension}", dpi=180, bbox_inches="tight")
+        path = folder / f"{name}.{extension}"
+        figure.savefig(path, dpi=180, bbox_inches="tight")
+        if extension == "svg":
+            # SVG paths remain separated by newlines after trimming spaces.
+            content = "\n".join(line.rstrip() for line in path.read_text(encoding="utf-8").splitlines()) + "\n"
+            path.write_text(content, encoding="utf-8", newline="\n")
     plt.close(figure)
 
 
@@ -94,7 +100,8 @@ def build_report(output):
     axis.set_xticks(range(len(parents)), parents, rotation=15, ha="right")
     axis.set_ylabel("Output coefficient L1 error")
     axis.set_yscale("log")
-    axis.legend(fontsize=8)
+    if axis.get_legend_handles_labels()[0]:
+        axis.legend(fontsize=8)
     axis.set_title("Median and full range; fixed prefixes are shared")
     save_figure(figure, report, "output_comparison")
     figure, axis = plt.subplots(figsize=(9, 4.5))
@@ -109,22 +116,30 @@ def build_report(output):
     axis.set_ylabel("Physical real-value queries")
     axis.set_title("This invocation only; shared data is charged once")
     save_figure(figure, report, "query_cost")
-    figure, axes = plt.subplots(1, 2, figsize=(10, 4.3))
+    figure, axes = plt.subplots(1, 2, figsize=(11, 5.4))
+    colors = {parent: plt.get_cmap("tab10")(index) for index, parent in enumerate(parents)}
+    styles = {"two_hessian": ":", "best_single": "--", "random_64": "-"}
     for parent in parents:
         for method in ("two_hessian", "best_single", "random_64"):
             selected = sorted([group for group in groups if group["parent_id"] == parent and
                                group["method"] == method and group["completed"]], key=lambda group: group["matrix_count"])
             if selected:
                 axes[0].plot([group["matrix_count"] for group in selected],
-                             [group["second_layer_error"]["median"] for group in selected], "o-", markersize=3,
+                             [group["second_layer_error"]["median"] for group in selected], marker="o", markersize=3,
+                             color=colors[parent], linestyle=styles[method],
                              label=f"{parent} / {method}")
-    for row in good:
-        if "hessian_diagnostics" in row and row["method"] == "random_64":
-            diagnostic = row["hessian_diagnostics"]
-            axes[1].scatter(diagnostic["joint_residual"], row["per_layer_errors"][1], s=15, alpha=0.6)
+        selected = [row for row in good if row["parent_id"] == parent and
+                    "hessian_diagnostics" in row and row["method"] == "random_64"]
+        if selected:
+            axes[1].scatter([row["hessian_diagnostics"]["joint_residual"] for row in selected],
+                            [row["per_layer_errors"][1] for row in selected],
+                            s=18, alpha=0.7, color=colors[parent], label=parent)
     axes[0].set(xlabel="Probe Hessians", ylabel="Second-layer operator error", yscale="log")
-    if len(parents) == 1:
-        axes[0].legend(fontsize=7)
+    if axes[0].get_legend_handles_labels()[0]:
+        handles = [Line2D([0], [0], color=colors[parent], label=parent) for parent in parents]
+        handles += [Line2D([0], [0], color="black", linestyle=style, label=method)
+                    for method, style in styles.items()]
+        axes[0].legend(handles=handles, fontsize=7, ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.22))
     axes[1].set(xlabel="Training joint residual", ylabel="Second-layer operator error", xscale="log", yscale="log")
     figure.suptitle("More probes and smaller residuals do not guarantee better recovery")
     save_figure(figure, report, "hessian_diagnostics")

@@ -24,4 +24,3 @@ where = ["src"]
 pythonpath = ["src"]
 testpaths = ["tests"]
 cache_dir = "cache/pytest"
-

@@ -14,4 +14,6 @@ A clean export of the staged Git files passed all 51 tests and regenerated the b
 
 The offline report's JavaScript filters were executed and verified at 560 total records, 140 records for the selected prefix, and 25 main OLS records. All 560 individual record links and the static report links resolve. Scientific figures were inspected locally.
 
+GitHub Actions also passed on both Ubuntu and Windows for release commit `c17b0384f0830afcd0f9a53e58364172374d19a3`: each job created the Python 3.10 conda environment, checked dependencies, ran the numerical tests, and regenerated the best checkpoint experiment with reference verification. See the [completed CI run](https://github.com/JinqiSMS/aspire/actions/runs/34986355727).
+
 Full first-layer timing is being measured separately. The checkpoint results above do not include fresh first-layer sampling. Timing measurements use the local Intel Core i5-13500H with one numerical-library thread and exclude installation and download time.
