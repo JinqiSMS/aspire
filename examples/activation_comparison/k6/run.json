@@ -1,0 +1,101 @@
+{
+  "experiment": "experiment_01",
+  "signature": {
+    "configuration": {
+      "architecture": {
+        "d": 8,
+        "hidden_widths": [
+          3,
+          3
+        ],
+        "k": 6
+      },
+      "public_bounds": {
+        "kappa0": 2.0,
+        "mu": 0.25
+      },
+      "first_layer": {
+        "algorithm_seed": 3141116543,
+        "samples": 16777216,
+        "steps": 32,
+        "batch_size": 4096,
+        "first_span_points": 16,
+        "original_direction_step": 0.25,
+        "reduced_gradient_step_factor": 0.5,
+        "bisection_absolute_tolerance": 1e-07,
+        "max_bisection_iterations": 100,
+        "query_budget": 40000000000,
+        "wall_seconds": 14400
+      },
+      "hessian": {
+        "directions": 12,
+        "direction_seed": 431061063,
+        "combinations": 64,
+        "combination_seed": 2356887966,
+        "heldout_directions": 6,
+        "heldout_seed": 2828169828,
+        "tau": 0.2,
+        "step": 0.1,
+        "gap_floor": 1e-10,
+        "rank_floor": 1e-12,
+        "tie_tolerance": 1e-12
+      },
+      "regression": {
+        "samples": 1048576,
+        "seed": 1586144878,
+        "batch_size": 65536
+      },
+      "evaluation": {
+        "directions": 20000,
+        "seed": 1444349591,
+        "parameter_delta": 0.1
+      }
+    },
+    "source_hash": "61f229c8a8007aabedd35a0764b0b48a26234a012d7642adeaa254428cd9ad3d",
+    "target_sha256": "6561ba4e77851996012491804da2933c7dcbc38448aa36d051eaf8d8558db711"
+  },
+  "environment": {
+    "python": "3.10.21",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "versions": {
+      "numpy": "1.26.4",
+      "scipy": "1.13.1",
+      "mpmath": "1.3.0",
+      "matplotlib": "3.8.4",
+      "PyYAML": "6.0.1"
+    }
+  },
+  "started_at": "2026-09-15T18:14:37.530941+00:00",
+  "status": "complete",
+  "activation_k": 6,
+  "active_stage": "complete",
+  "first_layer_origin": "imported_first_layer",
+  "first_layer_queries_this_execution": 0,
+  "first_layer_reuse_source": {
+    "directory": "archive/activation_signed_normalization/k6",
+    "source_hash": "4bb2af70934f0d27fe64ad063d6d4f2691fdc527fd249bee3e9468c05d07fede",
+    "parameter_sha256": "1f874b8855a1c268f9a064172882d8fe164c50d78d8294c795bb43b2f3885fd7",
+    "run_sha256": "4dc9f481b24f5108d5825d33c33428b127665068d46718039c5db99f31c43f2e",
+    "origin": "fresh_real_queries"
+  },
+  "hessian_counts": {
+    "n_real_calls_total": 798,
+    "n_cache_hits": 0,
+    "n_complex_calls": 798,
+    "n_suffix_calls": 798,
+    "n_directional_calls": 114,
+    "n_hessian_calls": 19,
+    "n_hr_transitions": 0,
+    "n_kept_samples": 0,
+    "n_real_calls_span": 0,
+    "n_real_calls_membership": 0,
+    "n_real_calls_moment_gradient": 0,
+    "n_real_calls_final_hessian": 546,
+    "n_real_calls_validation": 252,
+    "n_real_calls_evaluation": 0
+  },
+  "computation_seconds": 0.8819604000018444,
+  "first_layer_seconds_this_execution": 0.009275199990952387,
+  "hessian_seconds": 0.07490830001188442,
+  "regression_seconds": 0.4116703000036068
+}

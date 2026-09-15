@@ -1,0 +1,93 @@
+{
+  "algorithm_seed": 3141116543,
+  "samples": 16777216,
+  "steps": 32,
+  "batch_size": 4096,
+  "counts": {
+    "n_real_calls_total": 31994153088,
+    "n_cache_hits": 0,
+    "n_complex_calls": 0,
+    "n_suffix_calls": 31994150912,
+    "n_directional_calls": 50331776,
+    "n_hessian_calls": 0,
+    "n_hr_transitions": 536870912,
+    "n_kept_samples": 16777216,
+    "n_real_calls_span": 2176,
+    "n_real_calls_membership": 31138512896,
+    "n_real_calls_moment_gradient": 855638016,
+    "n_real_calls_final_hessian": 0,
+    "n_real_calls_validation": 0,
+    "n_real_calls_evaluation": 0
+  },
+  "stages": [
+    {
+      "layer": 1,
+      "status": "complete",
+      "span_singular_values": [
+        6976102.218900254,
+        6304242.332423509,
+        496448.48581741104,
+        5.654545355904313e-09,
+        4.538301732571738e-10,
+        3.394215403810441e-10,
+        2.3162641711879402e-10,
+        8.600479500884398e-12
+      ],
+      "span_condition": 14.05201630822578,
+      "span_method": "original_gradients",
+      "span_points": 16,
+      "zero_chords": 0,
+      "transitions": 536870912,
+      "sampler_mode": "independent_endpoints",
+      "xi": 0.0,
+      "outer_radius": 10.99783709598882,
+      "chains": 16777216,
+      "endpoint_steps": 32,
+      "batch_size": 4096,
+      "randomness_layout": "independent normal directions and uniform fractions per endpoint/step",
+      "moment_gap": 0.02705140701727568,
+      "moment_condition": 1.0593741473979437,
+      "moment_ridge": 0.0,
+      "moment_ess_min": 16777216,
+      "ess_method": "independent_endpoints_count_not_mixing_certificate",
+      "inner_radius": 0.25,
+      "radius_source": "public_bounds_conditional_on_accurate_basis",
+      "xi_source": "exact_first_suffix_only",
+      "suffix_diagnostics": {
+        "queries": 31994150912,
+        "precision_retries": 0,
+        "max_dps": 0,
+        "max_imaginary": 0.0,
+        "max_cancellation": 1.0,
+        "max_inverse_residual": 0.0,
+        "max_precision_difference": 0.0
+      },
+      "query_counts": {
+        "n_real_calls_total": 31994153088,
+        "n_cache_hits": 0,
+        "n_complex_calls": 0,
+        "n_suffix_calls": 31994150912,
+        "n_directional_calls": 50331776,
+        "n_hessian_calls": 0,
+        "n_hr_transitions": 536870912,
+        "n_kept_samples": 16777216,
+        "n_real_calls_span": 2176,
+        "n_real_calls_membership": 31138512896,
+        "n_real_calls_moment_gradient": 855638016,
+        "n_real_calls_final_hessian": 0,
+        "n_real_calls_validation": 0,
+        "n_real_calls_evaluation": 0
+      }
+    }
+  ],
+  "wall_seconds": 3474.8625474,
+  "parameter_sha256": "8cb7e36b3f13e82dfcbefb6d7df65b7c3871643d920669c98efcb0ea830d0b5f",
+  "origin": "imported_first_layer",
+  "reuse_source": {
+    "directory": "archive/activation_signed_normalization/k4",
+    "source_hash": "4bb2af70934f0d27fe64ad063d6d4f2691fdc527fd249bee3e9468c05d07fede",
+    "parameter_sha256": "8cb7e36b3f13e82dfcbefb6d7df65b7c3871643d920669c98efcb0ea830d0b5f",
+    "run_sha256": "c664107785fe6b61f6780642e508d1cfea2bc81c6d029fc3528b303209d9d36f",
+    "origin": "provided_first_layer"
+  }
+}

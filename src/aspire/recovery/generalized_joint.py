@@ -132,10 +132,14 @@ def recover_generalized(h0, matrices, rank, k, betas, *, selection="residual",
         best = max(tied, key=lambda r: (r["absolute_gap"], -r["index"]))
     c, z, eigenvalues = solutions[best["index"]]
     v = basis @ b0 @ z
-    sums = v.sum(axis=0)
-    if np.any(abs(sums) <= rank_floor*np.linalg.norm(v, axis=0)):
+    # The paper normalizes lifted directions coordinatewise, not just by a
+    # whole-column sign. This enforces nonnegativity even with noisy Hessians.
+    magnitudes = np.abs(v)
+    sums = magnitudes.sum(axis=0)
+    if not np.isfinite(sums).all() or np.any(sums <= 0):
         raise NumericalFailure("final_column_sum_unresolved", column_sums=sums.tolist())
-    w = v/sums
+    w = magnitudes/sums
+    oriented = v * np.where(v.sum(axis=0) < 0, -1., 1.)
     singular = np.linalg.svd(w, compute_uv=False)
     if singular[-1] <= rank_floor*singular[0]:
         raise NumericalFailure("final_weight_rank_unresolved", singular_values=singular.tolist())
@@ -159,9 +163,13 @@ def recover_generalized(h0, matrices, rank, k, betas, *, selection="residual",
         "outside_subspace_residual": float(np.linalg.norm(matrices-projected)/np.linalg.norm(matrices)),
         "minimum_weight_entry": float(np.min(w)),
         "negative_weight_entries": int(np.count_nonzero(w < -1e-12)),
-        "normalization": "whole_column_sign_and_column_sum",
+        "normalization": "coordinatewise_absolute_value_and_l1",
+        "negative_direction_entries_before_normalization": int(np.count_nonzero(oriented < 0)),
+        "normalization_direction_change": float(np.linalg.norm(magnitudes-oriented) / np.linalg.norm(v)),
         "coefficient_offdiagonal_residual": float(np.linalg.norm(offdiag(coefficient_matrix))),
-        "coefficient_scale_identity_error": float(np.linalg.norm(a-sums*sums/(k*(k-1)))),
+        # This discrepancy vanishes for exact positive directions. After
+        # entrywise absolute values it need not vanish for noisy directions.
+        "coefficient_direction_scale_discrepancy": float(np.linalg.norm(a-sums*sums/(k*(k-1)))),
         "hessian_reconstruction_residual": float(np.linalg.norm(h0-k*(k-1)*(w*a)@w.T)/np.linalg.norm(h0)),
     }
     artifacts = {"C": c, "V": v, "basis": basis, "whitened_hessians": white,

@@ -9,7 +9,7 @@ from ..evaluation.alignment import align
 from ..io import save_npz, write_json
 
 
-def save_comparison(output, true_weights, true_output, recovered_weights, recovered_output):
+def save_comparison(output, true_weights, true_output, recovered_weights, recovered_output, activation_k=4):
     aligned, coefficients, permutations = align(true_weights, recovered_weights, recovered_output)
     truth = {**{f"W{i + 1}": value for i, value in enumerate(true_weights)}, "a": true_output}
     raw = {**{f"W{i + 1}": value for i, value in enumerate(recovered_weights)}, "a": recovered_output}
@@ -17,7 +17,7 @@ def save_comparison(output, true_weights, true_output, recovered_weights, recove
     comparison = {"alignment": "Sequential hidden-unit permutations; sign alignment in the first layer only",
                   "permutations": permutations, "parameters": {}}
     arrays, entries = {}, []
-    lines = ["EXPERIMENT 1: RECOVERED PARAMETERS AND GROUND TRUTH", "",
+    lines = [f"EXPERIMENT 1 (k={activation_k}): RECOVERED PARAMETERS AND GROUND TRUTH", "",
              "Recovered values below are aligned for hidden-unit permutation and first-layer sign symmetry.",
              "Raw estimates and aligned estimates are both retained in weights.json and weights.npz.", ""]
     for name, target in truth.items():
@@ -53,6 +53,7 @@ def create_figures(output):
     comparison = json.loads((output / "weights.json").read_text(encoding="utf-8"))
     metrics = json.loads((output / "metrics.json").read_text(encoding="utf-8"))
     configuration = json.loads((output / "run.json").read_text(encoding="utf-8"))["signature"]["configuration"]
+    experiment_title = f"Experiment 1 (k={configuration['architecture']['k']})"
     folder = output / "figures"
     folder.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 10, "axes.titlesize": 12, "pdf.fonttype": 42,
@@ -64,7 +65,7 @@ def create_figures(output):
         plt.close(figure)
 
     figure, axes = plt.subplots(3, 3, figsize=(11.2, 11), gridspec_kw={"height_ratios": [8, 3, 1]}, layout="constrained")
-    figure.suptitle("Experiment 1: parameter values after symmetry alignment", fontsize=15)
+    figure.suptitle(experiment_title + ": parameter values after symmetry alignment", fontsize=15)
     for row, name in enumerate(("W1", "W2", "a")):
         values = comparison["parameters"][name]
         matrices = [np.atleast_2d(values[key]) for key in ("ground_truth", "recovered_aligned", "difference")]
@@ -93,7 +94,7 @@ def create_figures(output):
     axis.axhline(configuration["evaluation"]["parameter_delta"], color="#af4035", ls="--", label="Threshold")
     axis.set_ylim(0, max(configuration["evaluation"]["parameter_delta"], *values) * 1.3)
     axis.set_ylabel("Parameter error")
-    axis.set_title("Experiment 1: aligned parameter errors")
+    axis.set_title(experiment_title + ": aligned parameter errors")
     axis.legend(frameon=False)
     save(figure, "parameter_errors")
 
@@ -108,7 +109,7 @@ def create_figures(output):
     axis.set_ylabel("Coefficient value")
     axis.margins(y=0.25)
     axis.legend(frameon=False)
-    axis.set_title("Experiment 1: output coefficients")
+    axis.set_title(experiment_title + ": output coefficients")
     save(figure, "output_coefficients")
     write_json(output / "figure_build.json", {"seconds": time.perf_counter() - started,
                "new_oracle_queries": 0, "files": [f"figures/{name}.{extension}"

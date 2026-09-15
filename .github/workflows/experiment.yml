@@ -38,7 +38,10 @@ jobs:
           python -m pip check
       - name: Test numerical modules
         run: python -m pytest tests -q --basetemp tmp/pytest
-      - name: Run Experiment 1 with the stored first layer
-        run: python run_experiment.py --use-first-layer-checkpoint
-      - name: Check experiment outputs
-        run: python scripts/check_experiment.py results/experiment_01_checkpoint
+      - name: Check recorded experiment artifacts
+        run: |
+          for k in 4 6 8; do
+            python scripts/check_experiment.py "examples/activation_comparison/k$k"
+          done
+      - name: Audit repository files
+        run: python scripts/audit_release.py

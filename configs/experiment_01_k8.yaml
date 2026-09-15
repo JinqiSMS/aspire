@@ -1,0 +1,41 @@
+architecture:
+  d: 8
+  hidden_widths:
+  - 3
+  - 3
+  k: 8
+public_bounds:
+  kappa0: 2.0
+  mu: 0.25
+first_layer:
+  algorithm_seed: 3141116543
+  samples: 16777216
+  steps: 32
+  batch_size: 4096
+  first_span_points: 16
+  original_direction_step: 0.25
+  reduced_gradient_step_factor: 0.5
+  bisection_absolute_tolerance: 1.0e-07
+  max_bisection_iterations: 100
+  query_budget: 40000000000
+  wall_seconds: 14400
+hessian:
+  directions: 12
+  direction_seed: 431061063
+  combinations: 64
+  combination_seed: 2356887966
+  heldout_directions: 6
+  heldout_seed: 2828169828
+  tau: 0.2
+  step: 0.1
+  gap_floor: 1.0e-10
+  rank_floor: 1.0e-12
+  tie_tolerance: 1.0e-12
+regression:
+  samples: 1048576
+  seed: 1586144878
+  batch_size: 65536
+evaluation:
+  directions: 20000
+  seed: 1444349591
+  parameter_delta: 0.1

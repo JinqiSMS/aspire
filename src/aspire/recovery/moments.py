@@ -42,10 +42,9 @@ def raw_moments(points, gradients):
     return z.T@z/len(z), g.T@g/len(g)
 
 def moment_ess(points, gradients, chain_ids, mode):
+    if mode == "independent_endpoints": return {"moment_ess_min": len(points), "ess_method": "independent_endpoints_count_not_mixing_certificate"}
     i, j = np.triu_indices(points.shape[1])
     features = np.concatenate([points[:,i]*points[:,j], gradients[:,i]*gradients[:,j]], axis=1)
-    if mode == "independent_endpoints": return {"moment_ess_min": len(points), "ess_method": "independent_endpoints_count_not_mixing_certificate"}
     estimates = [effective_sample_size(features[chain_ids==c]) for c in np.unique(chain_ids)]
     total = np.sum(estimates, axis=0)
     return {"moment_ess_min": float(np.min(total)), "moment_ess_by_component": total.tolist(), "ess_method": "positive_pair_autocorrelation_by_chain"}
-

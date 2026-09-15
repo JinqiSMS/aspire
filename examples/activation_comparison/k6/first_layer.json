@@ -1,0 +1,89 @@
+{
+  "counts": {
+    "n_real_calls_total": 33000788608,
+    "n_cache_hits": 0,
+    "n_complex_calls": 0,
+    "n_suffix_calls": 33000783872,
+    "n_directional_calls": 50331776,
+    "n_hessian_calls": 0,
+    "n_hr_transitions": 536870912,
+    "n_kept_samples": 16777216,
+    "n_real_calls_span": 4736,
+    "n_real_calls_membership": 31138512896,
+    "n_real_calls_moment_gradient": 1862270976,
+    "n_real_calls_final_hessian": 0,
+    "n_real_calls_validation": 0,
+    "n_real_calls_evaluation": 0
+  },
+  "stages": [
+    {
+      "layer": 1,
+      "status": "complete",
+      "span_singular_values": [
+        2939911348675941.5,
+        1570806136558819.8,
+        8707278974858.719,
+        0.2076214140925644,
+        0.09680395817402064,
+        0.002864684979623039,
+        0.00015296119176507597,
+        1.7089768407152004e-07
+      ],
+      "span_condition": 337.63835489417556,
+      "span_method": "original_gradients",
+      "span_points": 16,
+      "zero_chords": 0,
+      "transitions": 536870912,
+      "sampler_mode": "independent_endpoints",
+      "xi": 0.0,
+      "outer_radius": 9.141818969790853,
+      "chains": 16777216,
+      "endpoint_steps": 32,
+      "batch_size": 4096,
+      "randomness_layout": "independent normal directions and uniform fractions per endpoint/step",
+      "moment_gap": 0.018062071839840457,
+      "moment_condition": 1.0446308954480374,
+      "moment_ridge": 0.0,
+      "moment_ess_min": 16777216,
+      "ess_method": "independent_endpoints_count_not_mixing_certificate",
+      "inner_radius": 0.25,
+      "radius_source": "public_bounds_conditional_on_accurate_basis",
+      "xi_source": "exact_first_suffix_only",
+      "suffix_diagnostics": {
+        "queries": 33000783872,
+        "precision_retries": 0,
+        "max_dps": 0,
+        "max_imaginary": 0.0,
+        "max_cancellation": 1.0,
+        "max_inverse_residual": 0.0,
+        "max_precision_difference": 0.0
+      },
+      "query_counts": {
+        "n_real_calls_total": 33000788608,
+        "n_cache_hits": 0,
+        "n_complex_calls": 0,
+        "n_suffix_calls": 33000783872,
+        "n_directional_calls": 50331776,
+        "n_hessian_calls": 0,
+        "n_hr_transitions": 536870912,
+        "n_kept_samples": 16777216,
+        "n_real_calls_span": 4736,
+        "n_real_calls_membership": 31138512896,
+        "n_real_calls_moment_gradient": 1862270976,
+        "n_real_calls_final_hessian": 0,
+        "n_real_calls_validation": 0,
+        "n_real_calls_evaluation": 0
+      }
+    }
+  ],
+  "wall_seconds": 3341.1416773999954,
+  "parameter_sha256": "1f874b8855a1c268f9a064172882d8fe164c50d78d8294c795bb43b2f3885fd7",
+  "origin": "imported_first_layer",
+  "reuse_source": {
+    "directory": "archive/activation_signed_normalization/k6",
+    "source_hash": "4bb2af70934f0d27fe64ad063d6d4f2691fdc527fd249bee3e9468c05d07fede",
+    "parameter_sha256": "1f874b8855a1c268f9a064172882d8fe164c50d78d8294c795bb43b2f3885fd7",
+    "run_sha256": "4dc9f481b24f5108d5825d33c33428b127665068d46718039c5db99f31c43f2e",
+    "origin": "fresh_real_queries"
+  }
+}

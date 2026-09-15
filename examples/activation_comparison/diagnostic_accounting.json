@@ -1,0 +1,9 @@
+{
+  "purpose": "Evaluator-only column-space diagnostics; excluded from learning totals",
+  "real_queries": 15232,
+  "by_activation": {
+    "4": 2176,
+    "6": 4736,
+    "8": 8320
+  }
+}

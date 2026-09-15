@@ -1,16 +1,13 @@
 """Unconstrained output regression using fixed recovered hidden weights."""
 import numpy as np
+from ..numeric import even_power
 
 
 def hidden_features(x, weights, k):
     state = np.asarray(x, float)
     for w in weights:
         state = state @ w
-        if k == 4:
-            state = state * state
-            state = state * state
-        else:
-            state = state ** k
+        state = even_power(state, k)
     return state
 
 

@@ -24,6 +24,7 @@ from ..recovery.hessian_bank import collect_hessians, orthogonal_directions
 from ..recovery.network import recover_network
 from ..recovery.output import hidden_features, ordinary_least_squares
 from ..teacher import Teacher
+from ..status import NumericalFailure
 
 
 def read_json(path):
@@ -64,29 +65,69 @@ def first_layer_config(specification):
     })
 
 
-def load_target():
+def load_target(k=4):
     folder = ROOT / "data/experiment_01"
     manifest = read_json(folder / "manifest.json")
     path = folder / "ground_truth.npz"
     if file_hash(path) != manifest["files"][path.name]:
         raise ValueError("Ground-truth file checksum mismatch")
     with np.load(path, allow_pickle=False) as saved:
-        target = Teacher([saved["W1"].copy(), saved["W2"].copy()], saved["a"].copy(), 4)
+        target = Teacher([saved["W1"].copy(), saved["W2"].copy()], saved["a"].copy(), k)
     return target, manifest
 
 
-def obtain_first_layer(real_oracle, architecture, specification, output, use_checkpoint, reference):
+def load_first_layer_from(source, architecture, specification, reference):
+    """Validate a completed first layer before reusing it across source versions."""
+    source = inside(source)
+    manifest = read_json(source / "run.json")
+    signature = manifest["signature"]
+    for section in ("architecture", "public_bounds", "first_layer"):
+        if signature["configuration"][section] != specification[section]:
+            raise ValueError(f"First-layer source has different {section} settings")
+    if signature["target_sha256"] != reference["files"]["ground_truth.npz"]:
+        raise ValueError("First-layer source belongs to a different target")
+    state = read_json(source / "first_layer.json")
+    parameters = source / "first_layer.npz"
+    if file_hash(parameters) != state["parameter_sha256"]:
+        raise ValueError("First-layer source checksum mismatch")
+    if not state.get("stages") or state["stages"][0].get("status") != "complete":
+        raise ValueError("First-layer source is incomplete")
+    with np.load(parameters, allow_pickle=False) as saved:
+        weights = saved["W1"].copy()
+    expected_shape = (architecture.d, architecture.hidden_widths[0])
+    if (weights.shape != expected_shape or not np.isfinite(weights).all() or
+            np.linalg.matrix_rank(weights) != expected_shape[1]):
+        raise ValueError("First-layer source has invalid weights")
+    state["reuse_source"] = {"directory": source.relative_to(ROOT).as_posix(),
+        "source_hash": signature["source_hash"], "parameter_sha256": state["parameter_sha256"],
+        "run_sha256": file_hash(source / "run.json"), "origin": state.get("origin")}
+    return weights, state
+
+
+def obtain_first_layer(real_oracle, architecture, specification, output, use_checkpoint, reference,
+                       first_layer_from=None):
     """Only the real oracle, public architecture/bounds, and fixed settings reach recovery."""
     started = time.perf_counter()
     parameters = output / "first_layer.npz"
     state_path = output / "first_layer.json"
+    if use_checkpoint and first_layer_from is not None:
+        raise ValueError("Choose only one first-layer source")
+    imported = (load_first_layer_from(first_layer_from, architecture, specification, reference)
+                if first_layer_from is not None else None)
     if state_path.exists():
         state = read_json(state_path)
         if file_hash(parameters) != state["parameter_sha256"]:
             raise ValueError("Saved first-layer checksum mismatch")
         with np.load(parameters, allow_pickle=False) as saved:
+            if imported is not None and not np.array_equal(saved["W1"], imported[0]):
+                raise ValueError("Output already contains a different first layer; choose a new --output")
             return saved["W1"].copy(), state, "saved_first_layer", 0, time.perf_counter() - started
-    if use_checkpoint:
+    if imported is not None:
+        weights, state = imported
+        origin, new_queries = "imported_first_layer", 0
+    elif use_checkpoint:
+        if architecture.k != 4:
+            raise ValueError("The provided first-layer checkpoint uses k=4; compute a fresh first layer")
         if (specification["first_layer"] != reference["first_layer_configuration"] or
                 specification["public_bounds"] != reference["public_bounds"]):
             raise ValueError("The first-layer checkpoint has different settings")
@@ -106,9 +147,9 @@ def obtain_first_layer(real_oracle, architecture, specification, output, use_che
             public_bounds=specification["public_bounds"], config=learner,
             rng=np.random.default_rng(specification["first_layer"]["algorithm_seed"]), stop_after_layer=1)
         if recovered["status"] != "prefix_complete":
-            write_json(output / "failure.json", {key: recovered[key] for key in
-                       ("status", "failure_reason", "stages")})
-            raise RuntimeError(f"First-layer recovery failed: {recovered['failure_reason']}")
+            write_json(output / "failure.json", {"stage": "first_layer", "query_counts": real_oracle.ledger.snapshot(),
+                       **{key: recovered[key] for key in ("status", "failure_reason", "stages")}})
+            raise NumericalFailure(recovered["failure_reason"])
         weights = recovered["hidden_weights"][0].copy()
         state = {"counts": real_oracle.ledger.snapshot(), "stages": recovered["stages"],
                  "wall_seconds": time.perf_counter() - started}
@@ -171,42 +212,67 @@ def evaluate(target, weights, coefficients, settings):
     return metrics, ledger.counts["n_real_calls_total"]
 
 
-def run(specification, output, use_checkpoint=False):
+def _run(specification, output, use_checkpoint=False, first_layer_from=None):
     started = time.perf_counter()
     output = inside(output)
     output.mkdir(parents=True, exist_ok=True)
-    target, reference = load_target()
     architecture = Architecture(**specification["architecture"])
-    if architecture.d != 8 or list(architecture.hidden_widths) != [3, 3] or architecture.k != 4:
-        raise ValueError("Experiment 1 uses architecture 8 -> 3 -> 3 -> 1 with fourth-power activation")
+    if architecture.d != 8 or list(architecture.hidden_widths) != [3, 3]:
+        raise ValueError("Experiment 1 uses architecture 8 -> 3 -> 3 -> 1")
+    if use_checkpoint and architecture.k != 4:
+        raise ValueError("The provided first-layer checkpoint uses k=4; compute a fresh first layer")
+    if use_checkpoint and first_layer_from is not None:
+        raise ValueError("Choose only one first-layer source")
+    target, reference = load_target(architecture.k)
     signature = {"configuration": specification, "source_hash": implementation_hash(),
                  "target_sha256": reference["files"]["ground_truth.npz"]}
     manifest_path = output / "run.json"
     if manifest_path.exists() and read_json(manifest_path)["signature"] != signature:
         raise ValueError("Output contains a different configuration or source version; choose a new --output")
     manifest = {"experiment": "experiment_01", "signature": signature, "environment": environment(),
-                "started_at": datetime.now(timezone.utc).isoformat(), "status": "running"}
+                "started_at": datetime.now(timezone.utc).isoformat(), "status": "running",
+                "activation_k": architecture.k, "active_stage": "first_layer"}
     write_json(manifest_path, manifest)
     settings = specification["first_layer"]
     first_ledger = QueryLedger(settings["query_budget"], 0, settings["wall_seconds"])
     real = CountedRealOracle(target.forward, architecture.d, first_ledger, batch_value=target.forward)
     first, state, origin, new_first_queries, first_seconds = obtain_first_layer(
-        real, architecture, specification, output, use_checkpoint, reference)
+        real, architecture, specification, output, use_checkpoint, reference, first_layer_from)
+    manifest.update(active_stage="second_layer", first_layer_origin=origin,
+                    first_layer_queries_this_execution=new_first_queries,
+                    first_layer_reuse_source=state.get("reuse_source"))
+    write_json(manifest_path, manifest)
     print(f"FIRST LAYER READY: {origin}", flush=True)
     hessian_started = time.perf_counter()
     hessian_ledger = QueryLedger(100000, 0)
     oracle = CountedRealOracle(target.forward, architecture.d, hessian_ledger)
     suffix = SuffixOracle(oracle, architecture, 2, [first], first_layer_config(specification)["oracle"], hessian_ledger)
-    second, hessian_diagnostics = recover_second_layer(suffix, specification["hessian"], 3, 4, hessian_ledger)
+    try:
+        second, hessian_diagnostics = recover_second_layer(suffix, specification["hessian"],
+            architecture.hidden_widths[-1], architecture.k, hessian_ledger)
+    except (NumericalFailure, np.linalg.LinAlgError) as error:
+        write_json(output / "failure.json", {"stage": "second_layer", "failure_reason": str(error),
+                   "query_counts": hessian_ledger.snapshot(), "details": getattr(error, "details", {})})
+        raise NumericalFailure(str(error)) from error
+    save_npz(output / "hidden_layers.npz", W1=first, W2=second)
     hessian_seconds = time.perf_counter() - hessian_started
     print("SECOND LAYER READY: multi-Hessian generalized eigendecomposition", flush=True)
+    manifest.update(active_stage="output_layer", hessian_counts=hessian_ledger.snapshot())
+    write_json(manifest_path, manifest)
     regression_started = time.perf_counter()
     regression_ledger = QueryLedger(specification["regression"]["samples"], 0)
     oracle = CountedRealOracle(target.forward, architecture.d, regression_ledger, batch_value=target.forward)
-    coefficients, regression_diagnostics = fit_output(oracle, [first, second], specification["regression"], 8, 4)
+    try:
+        coefficients, regression_diagnostics = fit_output(oracle, [first, second], specification["regression"],
+                                                          architecture.d, architecture.k)
+    except (AssertionError, np.linalg.LinAlgError, NumericalFailure) as error:
+        write_json(output / "failure.json", {"stage": "output_layer", "failure_reason": str(error),
+                   "query_counts": regression_ledger.snapshot()})
+        raise NumericalFailure("output_regression_failed", detail=str(error)) from error
     regression_seconds = time.perf_counter() - regression_started
     metrics, evaluation_queries = evaluate(target, [first, second], coefficients, specification["evaluation"])
-    metrics.update(hessian_diagnostics=hessian_diagnostics, regression_diagnostics=regression_diagnostics)
+    metrics.update(status="complete", activation_k=architecture.k,
+                   hessian_diagnostics=hessian_diagnostics, regression_diagnostics=regression_diagnostics)
     current = {"first_layer": new_first_queries,
                "hessian_training": hessian_ledger.counts["n_real_calls_final_hessian"],
                "hessian_validation": hessian_ledger.counts["n_real_calls_validation"],
@@ -220,8 +286,8 @@ def run(specification, output, use_checkpoint=False):
     write_json(output / "metrics.json", metrics)
     write_json(output / "queries.json", queries)
     from ..reporting.parameters import save_comparison, create_figures
-    save_comparison(output, target.weights, target.a, [first, second], coefficients)
-    manifest.update(status="complete", first_layer_origin=origin, computation_seconds=time.perf_counter() - started,
+    save_comparison(output, target.weights, target.a, [first, second], coefficients, activation_k=architecture.k)
+    manifest.update(status="complete", active_stage="complete", first_layer_origin=origin, computation_seconds=time.perf_counter() - started,
                     first_layer_seconds_this_execution=first_seconds,
                     hessian_seconds=hessian_seconds, regression_seconds=regression_seconds)
     write_json(manifest_path, manifest)
@@ -232,21 +298,59 @@ def run(specification, output, use_checkpoint=False):
     return metrics
 
 
+def run(specification, output, use_checkpoint=False, first_layer_from=None):
+    started = time.perf_counter()
+    try:
+        return _run(specification, output, use_checkpoint, first_layer_from)
+    except NumericalFailure as error:
+        output = inside(output)
+        manifest = read_json(output / "run.json")
+        failure = read_json(output / "failure.json")
+        target, _ = load_target(specification["architecture"]["k"])
+        weights = []
+        if (output / "hidden_layers.npz").exists():
+            with np.load(output / "hidden_layers.npz") as saved:
+                weights = [saved["W1"].copy(), saved["W2"].copy()]
+        elif (output / "first_layer.npz").exists():
+            with np.load(output / "first_layer.npz") as saved:
+                weights = [saved["W1"].copy()]
+        metrics = parameter_metrics(target, {"hidden_weights": weights, "output_weights_raw": None,
+            "status": "failed"}, specification["evaluation"]["parameter_delta"])
+        metrics.update(status="failed", activation_k=target.k, failure_stage=failure["stage"], failure_reason=error.reason)
+        manifest.update(status="failed", failure_reason=error.reason, computation_seconds=time.perf_counter() - started)
+        write_json(output / "run.json", manifest)
+        write_json(output / "metrics.json", metrics)
+        write_json(output / "queries.json", {"first_layer_queries_this_execution": manifest.get("first_layer_queries_this_execution", 0),
+                   "hessian_counts": manifest.get("hessian_counts", {}), "failed_stage": failure["stage"],
+                   "failed_stage_counts": failure["query_counts"]})
+        print(f"FAILED k={target.k} stage={failure['stage']}: {error.reason}", flush=True)
+        return metrics
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/experiment_01.yaml")
+    parser.add_argument("--activation", type=int, choices=(4, 6, 8), help="Override the activation exponent")
     parser.add_argument("--output", help="Output directory inside the project")
-    parser.add_argument("--use-first-layer-checkpoint", action="store_true",
-                        help="Load the supplied first-layer estimate and run the later stages")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--use-first-layer-checkpoint", action="store_true",
+                        help="Load the supplied k=4 first-layer estimate and run the later stages")
+    source.add_argument("--first-layer-from", help="Reuse a validated first layer from an experiment directory")
     parser.add_argument("--figures-only", action="store_true", help="Plot existing weight files without oracle queries")
     args = parser.parse_args()
-    output = inside(args.output or ("results/experiment_01_checkpoint" if args.use_first_layer_checkpoint else "results/experiment_01"))
+    specification = yaml.safe_load(inside(args.config).read_text(encoding="utf-8"))
+    if args.activation is not None:
+        specification["architecture"]["k"] = args.activation
+    k = specification["architecture"]["k"]
+    stem = "results/experiment_01" + (f"_k{k}" if k != 4 else "")
+    output = inside(args.output or (stem + "_checkpoint" if args.use_first_layer_checkpoint else stem))
     if args.figures_only:
         from ..reporting.parameters import create_figures
         create_figures(output)
         return
-    specification = yaml.safe_load(inside(args.config).read_text(encoding="utf-8"))
-    run(specification, output, args.use_first_layer_checkpoint)
+    result = run(specification, output, args.use_first_layer_checkpoint, args.first_layer_from)
+    if result["status"] == "failed":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

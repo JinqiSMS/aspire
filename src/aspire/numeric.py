@@ -5,6 +5,14 @@ import mpmath as mp
 import numpy as np
 from .status import NumericalFailure
 
+def even_power(values, k):
+    """Multiplication chains for the even real-valued batch activations."""
+    if k in (4, 6, 8):
+        square = values * values
+        fourth = square * square
+        return fourth if k == 4 else (fourth * square if k == 6 else fourth * fourth)
+    return values ** k
+
 def is_mp(x):
     return any(isinstance(v, (mp.mpf, mp.mpc)) for v in np.asarray(x, dtype=object).flat)
 
@@ -72,4 +80,3 @@ def interpolation_rule(degree, order, dps=0):
     nodes = np.cos(np.pi * j / degree)
     weights = 2 / degree * (np.cos(np.pi / degree * np.outer(j, j)) @ (np.array(derivative) / c)) / c
     return nodes, weights
-

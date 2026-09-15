@@ -13,24 +13,25 @@ from aspire.recovery.final_layer import recover_final
 from aspire.status import NumericalFailure
 
 
-def fixture(n=3, s=3):
+def fixture(n=3, s=3, k=4):
     rng = np.random.default_rng(121)
     w = rng.uniform(.05, .15, (n, s))
     w[:s] += np.eye(s)
     w /= w.sum(axis=0)
     a = np.arange(1, s+1, dtype=float)
     a /= a.sum()
-    teacher = Teacher([w], a, 4)
+    teacher = Teacher([w], a, k)
     directions = orthogonal_directions(n, 2*n, rng)
     hs = np.array([teacher.hessian(1+.2*v) for v in directions])
     return rng, w, a, teacher.hessian(np.ones(n)), hs
 
 
 @pytest.mark.parametrize("n,s", [(3, 3), (5, 3)])
-def test_exact_recovery_and_dual_direction_readout(n, s):
-    rng, w, a, h0, hs = fixture(n, s)
+@pytest.mark.parametrize("k", [4, 6, 8])
+def test_exact_recovery_and_dual_direction_readout(n, s, k):
+    rng, w, a, h0, hs = fixture(n, s, k)
     estimated, coef, diag, arrays = recover_generalized(
-        h0, hs, s, 4, random_coefficients(16, len(hs), rng))
+        h0, hs, s, k, random_coefficients(16, len(hs), rng))
     _, order = linear_sum_assignment(np.linalg.norm(w[:, :, None]-estimated[:, None, :], axis=0))
     np.testing.assert_allclose(estimated[:, order], w, atol=1e-11)
     np.testing.assert_allclose(coef[order], a, atol=1e-11)
@@ -39,7 +40,10 @@ def test_exact_recovery_and_dual_direction_readout(n, s):
     assert diag["metric_orthogonality_error"] < 1e-11
     assert diag["generalized_equation_residual"] < 1e-12
     assert diag["max_commutator"] < 1e-12
-    assert diag["coefficient_scale_identity_error"] < 1e-11
+    assert diag["coefficient_direction_scale_discrepancy"] < 1e-11
+    assert diag["normalization"] == "coordinatewise_absolute_value_and_l1"
+    assert np.all(estimated >= 0)
+    np.testing.assert_allclose(estimated.sum(axis=0), 1., atol=1e-14)
     wrong = arrays["C"]/arrays["C"].sum(axis=0)
     assert np.linalg.norm(wrong[:, order]-w) > .1
 
@@ -54,6 +58,31 @@ def test_degenerate_probe_resolved_by_combination():
     assert diag["selected_index"] == 1
     with pytest.raises(NumericalFailure, match="final_gap_unresolved"):
         recover_generalized(h0, bank, 3, 4, [[1., 0.]])
+
+
+def test_mixed_sign_directions_are_normalized_coordinatewise():
+    # An SPD matrix bank alone does not ensure positive eigendirections.
+    # Model a small perturbation of a direction whose true coordinate is small.
+    directions = np.array([[.92, .005, .075], [-.005, .845, .15], [.085, .15, .775]])
+    coefficients = np.array([.2, .3, .5])
+    h0 = 12 * (directions * coefficients) @ directions.T
+    bank = np.array([12 * (directions * (coefficients * scales)) @ directions.T
+                     for scales in ([.8, 1., 1.2], [1.1, .7, 1.4])])
+    assert np.linalg.eigvalsh(bank).min() > 0
+    estimated, coef, diag, arrays = recover_generalized(h0, bank, 3, 4, [[.4, .9]])
+    assert diag["negative_direction_entries_before_normalization"] == 1
+    assert diag["negative_weight_entries"] == 0
+    assert diag["normalization_direction_change"] > 0
+    assert np.all(estimated >= 0)
+    np.testing.assert_allclose(estimated.sum(axis=0), 1., atol=1e-14)
+    expected = np.abs(directions) / np.abs(directions).sum(axis=0)
+    _, order = linear_sum_assignment(np.linalg.norm(expected[:, :, None]-estimated[:, None, :], axis=0))
+    np.testing.assert_allclose(estimated[:, order], expected, atol=1e-12)
+    # Anchor diagnostics must reflect the weights after normalization.
+    fitted = 12 * (estimated * coef) @ estimated.T
+    np.testing.assert_allclose(diag["hessian_reconstruction_residual"],
+                               np.linalg.norm(h0-fitted)/np.linalg.norm(h0))
+    assert diag["hessian_reconstruction_residual"] > 1e-5
 
 
 def test_unidentifiable_bank_is_not_success():

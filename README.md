@@ -2,9 +2,9 @@
 
 ## Experiment 1: layerwise parameter recovery
 
-This experiment recovers the parameters of a fixed polynomial network with architecture **8 → 3 → 3 → 1** and activation $z\mapsto z^4$, using noiseless real-valued function queries.
+This experiment recovers an **8 → 3 → 3 → 1** polynomial network with activation $z\mapsto z^k$, for **$k=4,6,8$**, using noiseless real-valued function queries.
 
-The first hidden layer uses column-space recovery and ASPIRE gradient moments. The second hidden layer uses measured Hessians and symmetric generalized eigendecomposition. The output coefficients are fitted by ordinary least squares on standard Gaussian inputs.
+The first hidden layer uses column-space recovery and ASPIRE gradient moments. The second hidden layer uses multiple Hessians and symmetric generalized eigendecomposition, followed by coordinatewise absolute values and unit-column-sum normalization. The output coefficients are fitted by ordinary least squares on standard Gaussian inputs.
 
 ## Installation
 
@@ -15,9 +15,9 @@ conda env create -f environment.yml
 conda activate aspire
 ```
 
-The environment is named `aspire` and uses Python 3.10. Dependencies are pinned in `requirements-lock.txt`; the numerical versions are NumPy 1.26.4 and SciPy 1.13.1. This experiment runs on a CPU.
+The conda environment is named `aspire` and uses **Python 3.10**. Dependencies are pinned in `requirements-lock.txt`, including NumPy 1.26.4 and SciPy 1.13.1. Computation runs on a CPU.
 
-If the environment already exists:
+For an existing environment:
 
 ```bash
 conda activate aspire
@@ -25,129 +25,121 @@ python -c "import sys; assert sys.version_info[:2] == (3, 10)"
 python -m pip install -r requirements-lock.txt
 ```
 
-## Run the experiment
+## Run a configuration
 
-Run from the repository root:
-
-```bash
-python run_experiment.py
-```
-
-This estimates all three parameter blocks and writes the output to `results/experiment_01/`. It prints the recovered matrices, ground-truth matrices, and their differences in the terminal, and saves three Matplotlib figures as PNG and PDF.
-
-To use the supplied first-layer estimate and run the Hessian and regression stages:
+Run commands from the repository root, using new output directories. On a fresh checkout, each command computes all three parameter blocks from function queries:
 
 ```bash
-python run_experiment.py --use-first-layer-checkpoint
+# Fourth-power activation
+python run_experiment.py --config configs/experiment_01.yaml --output results/activation_comparison/k4
+
+# Sixth-power activation
+python run_experiment.py --config configs/experiment_01_k6.yaml --output results/activation_comparison/k6
+
+# Eighth-power activation
+python run_experiment.py --config configs/experiment_01_k8.yaml --output results/activation_comparison/k8
 ```
 
-This writes to `results/experiment_01_checkpoint/`. The first-layer source and the number of new function queries are recorded explicitly. The files in [examples/experiment_01](examples/experiment_01/) were generated with this command using the stored first layer from a completed full sampling run.
+Run only the command for the exponent you need. The three configurations have identical target weights, numerical hyperparameters, and random seeds; only `architecture.k` changes.
 
-Completed first layers are saved in the output directory and reused on subsequent runs. For a fresh full execution, specify a new directory:
+Use an empty or new output directory for a full run. For another full execution, use a new path such as `--output results/run2/k6`.
+
+Without arguments, `python run_experiment.py` runs `configs/experiment_01.yaml` and writes to `results/experiment_01/`.
+
+After completing all three configurations, generate the comparison report and figures:
 
 ```bash
-python run_experiment.py --output results/experiment_01_run2
+python scripts/summarize_activation.py --output results/activation_comparison
 ```
-
-Changing the configuration or source version also requires a new output directory. An interruption during first-layer sampling restarts that layer.
 
 ## Configuration and random seeds
 
-The complete configuration is in [configs/experiment_01.yaml](configs/experiment_01.yaml).
+The complete settings are in [experiment_01.yaml](configs/experiment_01.yaml), [experiment_01_k6.yaml](configs/experiment_01_k6.yaml), and [experiment_01_k8.yaml](configs/experiment_01_k8.yaml).
 
-- First layer: **16,777,216 independent chains, 32 steps per chain**, batch size 4,096; algorithm seed `3141116543`.
-- Second layer: one anchor Hessian and 12 probe Hessians, 64 random mixtures; direction seed `431061063`, mixture seed `2356887966`.
+- First layer: **16,777,216 independent chains, 32 transitions per chain**, batch size 4,096, and 16 column-space probes; seed `3141116543`.
+- Second layer: one anchor Hessian, 12 probe Hessians, and 64 random mixtures; direction seed `431061063`, mixture seed `2356887966`.
 - Held-out Hessians: six probes; seed `2828169828`.
-- Output regression: **1,048,576** inputs sampled from $\mathcal N(0,I_8)$; seed `1586144878`.
+- Output regression: **1,048,576** standard Gaussian inputs; seed `1586144878`.
 - Prediction evaluation: 20,000 angular directions; seed `1444349591`.
 
-Each stage uses its own `numpy.random.default_rng(seed)`. The entry point fixes numerical-library thread counts to one. The fixed target arrays and optional first-layer checkpoint are stored in `data/experiment_01/` and checked by SHA-256. Batch size is part of the first-layer random-number layout.
+Each stage uses its own `numpy.random.default_rng(seed)`. The entry point fixes numerical-library thread counts to one. Batch size is part of the first-layer random-number layout. The target arrays in `data/experiment_01/ground_truth.npz` are checked by SHA-256. Floating-point values can vary slightly between numerical-library builds.
 
-## Recorded parameter values and errors
+## View one experiment's results
 
-The result for this target and these random streams is:
-
-```text
-First-layer operator error     0.01303729
-Second-layer operator error    0.03054302
-Output coefficient L1 error    0.05872970
-Output coefficient L1 norm     0.99183571
-```
-
-The aligned output coefficients are approximately
-
-$$
-\widehat a=(0.3586160344,\;0.3279780697,\;0.3052416023),
-\qquad a=(1/3,\;1/3,\;1/3).
-$$
-
-The complete values of $W_1$, $W_2$, and $a$ are in [weights.txt](examples/experiment_01/weights.txt), with every coordinate also available in [weights.csv](examples/experiment_01/weights.csv). Comparison uses sequential hidden-unit permutation alignment and first-layer sign alignment. Raw estimates remain available in JSON and NPZ. Floating-point results can differ slightly between numerical-library builds.
-
-![Parameter errors](examples/experiment_01/figures/parameter_errors.png)
-
-![Output coefficients](examples/experiment_01/figures/output_coefficients.png)
-
-The [weight comparison figure](examples/experiment_01/figures/weight_comparison.png) shows all ground-truth entries, aligned estimates, and signed differences. PDF versions are saved beside the PNG files.
-
-## Output files
+The program prints the ground-truth weights, aligned estimates, and their differences in the terminal. For example, the sixth-power command writes:
 
 ```text
-results/experiment_01/
-  run.json                  # Configuration, source hash, environment, and timing
-  metrics.json              # Parameter errors and numerical diagnostics
-  queries.json              # Stage costs and current-execution query totals
-  first_layer.npz           # Completed first-layer parameters
-  first_layer.json          # First-layer sampling settings and query ledger
-  weights.txt               # Readable ground truth, aligned estimates, differences
+results/activation_comparison/k6/
+  weights.txt               # Readable W1, W2, a, ground truth, and differences
   weights.csv               # One row per parameter coordinate
-  weights.json              # Ground truth, raw estimates, aligned estimates, errors
-  weights.npz               # The same parameter arrays at full numerical precision
+  weights.json              # Ground truth, raw estimates, aligned estimates
+  weights.npz               # Full-precision parameter arrays
+  metrics.json              # Parameter errors, success flag, diagnostics
+  queries.json              # Stage query counts and totals
+  run.json                  # Configuration, source hash, environment, timing
+  first_layer.npz           # First-layer estimate
+  first_layer.json          # First-layer diagnostics and query counts
   figures/
-    weight_comparison.png   # Full parameter comparison; PDF also saved
-    parameter_errors.png    # Layerwise errors; PDF also saved
-    output_coefficients.png # Output coefficient values; PDF also saved
+    weight_comparison.png   # Ground truth, estimates, and differences
+    parameter_errors.png    # First layer, second layer, and output errors
+    output_coefficients.png # Output coefficients versus ground truth
 ```
 
-JSON and NPZ retain full floating-point values; figures use rounded annotations. To inspect the arrays directly:
+Every figure is also saved as a PDF. Open `weights.txt` for numerical comparisons, `metrics.json` for accuracy, and the PNG/PDF files for figures. `parameter_success` is true when both hidden-layer operator errors and the output coefficient L1 error are at most 0.1. `status: complete` means that execution finished; it is distinct from this accuracy criterion.
+
+The parameter comparison aligns hidden-unit permutations and first-layer signs. Both raw and aligned arrays are preserved. To inspect them in Python:
 
 ```python
 import numpy as np
-weights = np.load("results/experiment_01/weights.npz")
-print(weights["W1_true"])
-print(weights["W1_aligned"])
-print(weights["W2_aligned"])
-print(weights["a_aligned"])
+
+with np.load("results/activation_comparison/k6/weights.npz") as weights:
+    for name in ("W1", "W2", "a"):
+        print(name, "ground truth:", weights[f"{name}_true"])
+        print(name, "recovered:", weights[f"{name}_aligned"])
+        print(name, "difference:", weights[f"{name}_difference"])
 ```
 
-Draw the figures again from saved parameters:
+To redraw an existing experiment's figures without running the algorithm:
 
 ```bash
-python run_experiment.py --figures-only --output results/experiment_01
+python run_experiment.py --figures-only --output results/activation_comparison/k6
 ```
 
-## Query costs and runtime
+## View the activation comparison
 
-```text
-Column-space recovery                     2,176
-Hit-and-Run membership            31,138,512,896
-Gradient moments                    855,638,016
-First-layer total                31,994,153,088
-Training Hessians                          390
-Gaussian training labels             1,048,576
-Total learning queries           31,995,202,054
-```
+The summary command writes `report.md`, `summary.csv`, `summary.json`, and three comparison figures under `results/activation_comparison/figures/`: `activation_errors`, `activation_coefficients`, and `activation_diagnostics`, each as PNG and PDF.
 
-Held-out Hessians add 180 queries and prediction evaluation adds 20,000. The `--use-first-layer-checkpoint` command makes **1,069,146 new queries** in total; the saved first-layer cost is reported separately.
+Recorded results for the fixed target and stage seeds are listed below as **first-layer operator error, second-layer operator error, output coefficient L1 error**:
 
-On an Intel Core i5-13500H with Python 3.10.21 and one numerical-library thread, the first-layer stage took **57.91 minutes**. Allow approximately **one hour** for the full command and several GiB of free RAM. With the stored first layer, the remaining computation and figure export take roughly **5-10 seconds**. These timings exclude environment installation and vary with hardware and system load.
+- **$k=4$:** 0.01303729, 0.02598736, 0.06898544.
+- **$k=6$:** 0.01271765, 0.02581270, 0.06030532.
+- **$k=8$:** 0.00627429, 0.01296156, 0.04586132.
 
-## Tests and source layout
+Recorded artifacts and their stage-level execution metadata are in [examples/activation_comparison](examples/activation_comparison/README.md). Open the complete weights for [k=4](examples/activation_comparison/k4/weights.txt), [k=6](examples/activation_comparison/k6/weights.txt), or [k=8](examples/activation_comparison/k8/weights.txt). These are fixed-instance results, not estimates of an across-seed success rate.
+
+![Activation parameter errors](examples/activation_comparison/figures/activation_errors.png)
+
+See [docs/activation_experiment.md](docs/activation_experiment.md) for output coefficient values and [docs/algorithm.md](docs/algorithm.md) for the mathematical operations.
+
+## Runtime and query costs
+
+Allow approximately **one hour per full configuration** on an Intel Core i5-13500H with Python 3.10.21 and one numerical-library thread, or approximately three hours when running all three sequentially. Previous first-layer measurements were approximately 55–58 minutes. Timing depends on hardware and system load; allow several GiB of free RAM. Environment installation is not included.
+
+Complete learning-query totals, including the first layer, training Hessians, and Gaussian regression labels, are:
+
+- $k=4$: **31,995,202,054**; including held-out Hessians and prediction evaluation: **31,995,222,234**.
+- $k=6$: **33,001,837,730**; including held-out Hessians and prediction evaluation: **33,001,857,982**.
+- $k=8$: **33,337,385,790**; including held-out Hessians and prediction evaluation: **33,337,406,114**.
+
+The network degree is $k^2$. First-layer gradient interpolation uses $k^2+1$ nodes per direction, and suffix-Hessian interpolation uses $k+1$. Degree-dependent node counts and radius bounds explain the different query costs. Exact stage counts are saved in `queries.json`.
+
+## Checks and source layout
 
 ```bash
 python -m pytest tests -q --basetemp tmp/pytest
-python scripts/check_experiment.py results/experiment_01_checkpoint
+python scripts/check_experiment.py results/activation_comparison/k6
 ```
 
-The second command checks the output of the checkpoint command above. GitHub Actions runs the numerical tests and this experiment on Linux and Windows.
+The second command validates parameter files, symmetry alignment, nonnegative second-layer normalization, metrics, query accounting, and figure files. GitHub Actions runs numerical tests covering all three exponents and checks the recorded artifacts on Linux and Windows.
 
-See [docs/algorithm.md](docs/algorithm.md) for the mathematical operations and [docs/modules.md](docs/modules.md) for the code map. Source code, comments, configuration, output labels, and documentation use English.
+See [docs/modules.md](docs/modules.md) for the code map. Runtime outputs, caches, local archives, and environments are excluded from Git. Source code, comments, configuration, documentation, and output labels use English.

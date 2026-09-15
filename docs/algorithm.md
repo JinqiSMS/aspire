@@ -45,7 +45,13 @@ $$
 H_\beta C=H_0C\Lambda,\qquad C^\top H_0C=I.
 $$
 
-Directions are recovered from $V=H_0C$. Each column is normalized by its signed column sum. The mixture is selected using the joint off-diagonal residual of measured training Hessians, with a spectral-gap tie break. Ground-truth parameter error does not enter this within-run mixture selection.
+Directions are recovered from $V=H_0C$. Following the paper, take coordinatewise absolute values and then normalize each column:
+
+$$
+\widehat w_{2,j}=\frac{|V_{:,j}|}{\mathbf 1^\top|V_{:,j}|}.
+$$
+
+For a nonzero direction this guarantees nonnegative entries and a unit column sum; it does not impose strict positivity on zero entries. The mixture is selected using the joint off-diagonal residual of measured training Hessians, with a spectral-gap tie break. Ground-truth parameter error does not enter this within-run mixture selection. Joint-diagonalization residuals refer to the spectral directions before normalization; the anchor reconstruction residual is evaluated again using the normalized weights. The output coefficients are subsequently fitted using the normalized hidden-layer features.
 
 ## Output coefficients
 
@@ -71,3 +77,13 @@ $$
 $$
 
 `weights.json` and `weights.npz` retain ground truth, raw estimates, aligned estimates, and signed differences. `weights.csv` records every aligned coordinate separately. This alignment changes labels, not the network function.
+
+## Other even activation exponents
+
+For the activation study the same parameter matrices are used with $k=6$ and $k=8$. Replace fourth powers by $k$th powers in the network and feature formulas. The total polynomial degree is $Q=k^2$, and the last-suffix Hessian is
+
+$$
+H(y)=k(k-1)W_2\operatorname{diag}\!\left(a\odot(W_2^\top y)^{\odot(k-2)}\right)W_2^\top.
+$$
+
+First-layer directional derivatives therefore use $k^2+1$ interpolation nodes, while each Hessian directional derivative uses $k+1$ nodes. The positive-coordinate prefix inversion uses $k$th roots. The generalized eigenproblem, coordinatewise absolute-value normalization, and unregularized OLS retain the same form. Each exponent has its own first-layer estimate; the sample count, number of transitions, probe count, mixture count, Gaussian sample count, seeds, and tolerances are fixed.

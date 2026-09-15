@@ -1,7 +1,7 @@
 """Evaluator-owned model. Never imported by recovery or oracle modules."""
 from dataclasses import dataclass
 import numpy as np
-from .numeric import matmul, is_mp, array_mp
+from .numeric import matmul, is_mp, array_mp, even_power
 
 @dataclass
 class Teacher:
@@ -14,11 +14,10 @@ class Teacher:
         with np.errstate(over="ignore", invalid="ignore"):
             for w in self.weights:
                 h = matmul(w.T, h) if h.ndim == 1 else h @ w
-                if h.ndim == 2 and h.dtype.kind == 'f' and self.k == 4:
+                if h.ndim == 2 and h.dtype.kind == 'f':
                     # Same value oracle; avoid general pow for billions of
                     # vectorized real queries. Scalar/high-precision unchanged.
-                    h = h*h
-                    h = h*h
+                    h = even_power(h, self.k)
                 else:
                     h = h ** self.k
             return matmul(self.a[None, :], h)[0] if h.ndim == 1 else h @ self.a
