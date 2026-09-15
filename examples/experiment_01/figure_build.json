@@ -1,0 +1,12 @@
+{
+  "seconds": 3.436749200001941,
+  "new_oracle_queries": 0,
+  "files": [
+    "figures/weight_comparison.png",
+    "figures/weight_comparison.pdf",
+    "figures/parameter_errors.png",
+    "figures/parameter_errors.pdf",
+    "figures/output_coefficients.png",
+    "figures/output_coefficients.pdf"
+  ]
+}

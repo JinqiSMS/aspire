@@ -1,0 +1,29 @@
+{
+  "current_execution": {
+    "first_layer": 0,
+    "hessian_training": 390,
+    "hessian_validation": 180,
+    "gaussian_labels": 1048576,
+    "prediction_evaluation": 20000
+  },
+  "current_execution_total": 1069146,
+  "complete_learning_total": 31995202054,
+  "first_layer_origin": "provided_first_layer",
+  "first_layer_breakdown": {
+    "n_real_calls_total": 31994153088,
+    "n_cache_hits": 0,
+    "n_complex_calls": 0,
+    "n_suffix_calls": 31994150912,
+    "n_directional_calls": 50331776,
+    "n_hessian_calls": 0,
+    "n_hr_transitions": 536870912,
+    "n_kept_samples": 16777216,
+    "n_real_calls_span": 2176,
+    "n_real_calls_membership": 31138512896,
+    "n_real_calls_moment_gradient": 855638016,
+    "n_real_calls_final_hessian": 0,
+    "n_real_calls_validation": 0,
+    "n_real_calls_evaluation": 0
+  },
+  "complete_total_with_evaluation": 31995222234
+}

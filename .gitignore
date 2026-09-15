@@ -7,10 +7,8 @@ archive/
 datasets/
 results/
 implementations/
-reports/*
-!reports/reproduction/
-!reports/validation/
-figures/
+/reports/
+/figures/
 build/
 dist/
 .pytest_cache/

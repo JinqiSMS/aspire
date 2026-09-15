@@ -3,5 +3,3 @@
 *.png binary
 *.pdf binary
 *.zip binary
-instances/**/*.json -text
-reference/*.json -text

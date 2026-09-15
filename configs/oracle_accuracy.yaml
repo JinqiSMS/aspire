@@ -1,5 +1,0 @@
-# Experimental choices; not theorem-certified constants.
-experiment_name: oracle_accuracy
-kind: oracle_accuracy
-oracle:
-  mode: exact_prefix_debug

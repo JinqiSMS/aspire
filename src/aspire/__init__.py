@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 __version__ = "0.1.0"
-_project = next((p for p in Path(__file__).resolve().parents if (p / "run_experiments.py").exists()), Path.cwd())
+_project = next((p for p in Path(__file__).resolve().parents if (p / "run_experiment.py").exists()), Path.cwd())
 ROOT = Path(os.environ.get("ASPIRE_ROOT", _project)).resolve()
 for _key, _subdir in {"MPLCONFIGDIR":"cache/matplotlib", "TMP":"tmp", "TEMP":"tmp", "PIP_CACHE_DIR":"cache/pip"}.items():
     _path=ROOT / _subdir

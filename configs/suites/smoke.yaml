@@ -1,8 +1,0 @@
-configs:
-- oracle_accuracy.yaml
-- sampler_check.yaml
-- single_layer_smoke.yaml
-- strict_smoke.yaml
-- prefix_smoke.yaml
-- baseline_smoke.yaml
-- ntk_smoke.yaml

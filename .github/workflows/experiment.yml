@@ -1,0 +1,44 @@
+name: Experiment 1
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  experiment:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash -el {0}
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v4
+        with:
+          miniforge-version: latest
+          activate-environment: aspire
+          environment-file: environment.yml
+      - name: Check environment
+        run: |
+          python -c "import sys; assert sys.version_info[:2] == (3, 10)"
+          python -m pip check
+      - name: Test numerical modules
+        run: python -m pytest tests -q --basetemp tmp/pytest
+      - name: Run Experiment 1 with the stored first layer
+        run: python run_experiment.py --use-first-layer-checkpoint
+      - name: Check experiment outputs
+        run: python scripts/check_experiment.py results/experiment_01_checkpoint

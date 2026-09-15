@@ -1,75 +1,73 @@
-# Mathematical algorithm
+# Experiment 1: layerwise parameter recovery
 
-The bias-free target is
-
-$$
-f(x)=a^T\sigma\!\left(W_2^T\sigma(W_1^Tx)\right),\qquad \sigma(t)=t^4.
-$$
-
-The main instance has $W_1\in\mathbb R^{8\times3}$, $W_2\in\mathbb R^{3\times3}$, and $a\in\mathbb R^3$. Its total degree is 16. Stored weights have input coordinates in rows and output units in columns.
-
-## First layer
-
-Original real-value queries are interpolated along directions to recover gradients and a column-space basis. Analytic target gradients are never supplied to the learner. Independent Hit-and-Run chains sample the reduced sublevel set, giving uncentered moments
+The target is the homogeneous polynomial network
 
 $$
-\widehat\Sigma_x=\frac1m\sum_i z_i z_i^T,\qquad
-\widehat\Sigma_g=\frac1m\sum_i g_i g_i^T.
+h_1(x)=(W_1^\top x)^{\odot 4},\qquad
+h_2(x)=(W_2^\top h_1(x))^{\odot 4},\qquad
+f(x)=a^\top h_2(x).
 $$
 
-For $\widehat\Sigma_x=L_xL_x^T$, the implementation diagonalizes $L_x^T\widehat\Sigma_gL_x$, then maps directions through $L_x^{-T}$ and the column-space basis. The best setting has $m=16{,}777{,}216$ endpoints and 32 steps each. Batch size is part of the fixed RNG layout.
+Here $W_1\in\mathbb R^{8\times3}$, $W_2\in\mathbb R^{3\times3}$, and $a\in\mathbb R^3$. The experiment uses a fixed target and noiseless real-valued function queries. All random seeds are explicit in `configs/experiment_01.yaml`.
 
-## Measured suffix Hessians
+## First hidden layer
 
-The next stage uses the **estimated** first layer to construct a suffix oracle through prefix inversion and original real queries. It does not receive the true hidden-layer oracle. Prefix errors therefore perturb the expected simultaneous-diagonalization structure.
+Column-space recovery evaluates first-layer gradients through polynomial interpolation of real function values. It obtains a basis $B$ for the estimated column space and works with the reduced function $g(z)=f(Bz)$. Independent Hit-and-Run chains provide endpoints in the reduced sublevel body. Each chain starts from the configured initial point and takes 32 transitions; the sample count is 16,777,216 and the batch size is 4,096.
 
-For an exact prefix, with $W=W_2$,
-
-$$
-H(y)=12W\operatorname{diag}\!\left(a\odot(W^Ty)^2\right)W^T.
-$$
-
-Use anchor $y_0=\mathbf1$, probes $y_i=\mathbf1+0.2u_i$ from random orthogonal bases, and interpolation radius 0.1. In three coordinates, each degree-four symmetric Hessian needs $6\times5=30$ real queries.
-
-## Generalized eigendecomposition
-
-With positive-definite anchor $H_0$, form a random combination and solve
+The algorithm estimates position and gradient moments,
 
 $$
-H_\beta=\sum_{i=1}^M\beta_iH_i,\qquad
-H_\beta C=H_0C\Lambda,\qquad C^TH_0C=I.
+S_z=\frac1N\sum_{r=1}^N z_rz_r^\top,\qquad
+S_\nabla=\frac1N\sum_{r=1}^N\nabla g(z_r)\nabla g(z_r)^\top.
 $$
 
-The implementation uses symmetric generalized `scipy.linalg.eigh`, projecting onto the resolved rank subspace when rectangular. Whitening diagnostics use Cholesky factors and triangular solves, without explicitly inverting the Cholesky factor.
+The ASPIRE moment eigensystem gives hidden directions in the reduced space, which are mapped back with $B$ and normalized. The gradients are obtained from the real-value oracle by interpolation; their exact analytic values are not supplied to the learner.
 
-The eigenvectors are dual directions. Recover weights using
+## Second hidden layer
 
-$$
-V=H_0C,\qquad \widehat W_{:j}=\frac{V_{:j}}{\mathbf1^TV_{:j}},\qquad
-\widehat a_H=\frac1{12}\operatorname{diag}\!\left(\widehat W^\dagger H_0\widehat W^{\dagger T}\right).
-$$
+The suffix oracle is constructed from the recovered $\widehat W_1$ and real queries to $f$. Its Hessians are measured at the anchor $y_0=\mathbf1$ and at 12 probe points $y_i=\mathbf1+\tau u_i$, where $\tau=0.2$. The directions consist of four independent orthogonal bases. Six additional probes are reserved for evaluating the joint residual.
 
-Using $C$ directly as weights is incorrect. The main solver evaluates 64 normalized Gaussian combinations, minimizes training off-diagonal residual relative to the non-isotropic signal, and breaks residual ties within `1e-12` using the larger absolute eigengap.
-
-Unresolved rank, nonpositive anchor rank, and unresolved eigengaps are explicit failures. Approximate-prefix probe matrices need not all be positive definite. Held-out residuals and whitened commutators are diagnostics only. The separate absolute-normalization control applies elementwise absolute values to the same raw directions before normalizing columns.
-
-## Gaussian output regression
-
-Draw $x_i\sim N(0,I_8)$, query $y_i=f(x_i)$, and freeze both hidden estimates. Form
+In exact suffix coordinates the Hessians have the common structure
 
 $$
-\Phi_{ij}=\left[\sigma\!\left(\widehat W_2^T\sigma(\widehat W_1^Tx_i)\right)\right]_j,\qquad
-\widehat a=\arg\min_b\|\Phi b-y\|_2^2.
+H(y)=12W_2\,\operatorname{diag}\!\left(a\odot(W_2^\top y)^{\odot2}\right)W_2^\top.
 $$
 
-There is no intercept, ridge, positivity constraint, or simplex projection. Column and target scaling improve numerical conditioning without changing the unweighted least-squares objective. The SVD solution is checked against `numpy.linalg.lstsq`.
-
-## Evaluation
-
-Hidden permutations and admissible first-layer signs are aligned before computing errors. The numerical target is
+For a positive-definite anchor $H_0$, whitening gives
 
 $$
-\max\left\{\|\widehat W_1-W_1\|_2,\|\widehat W_2-W_2\|_2,\|\widehat a-a\|_1\right\}\le0.1.
+H_0=LL^\top,\qquad A_i=L^{-1}H_iL^{-\top}.
 $$
 
-The norm $\|\widehat a\|_1$ is reported separately. Prediction evaluation uses directions in the union of true and estimated first-layer spans; that construction belongs to the evaluator alone. The successful setting is a local empirical result, not a theorem certificate.
+For each of 64 random coefficient vectors, the code forms $H_\beta=\sum_i\beta_iH_i$ and solves the symmetric generalized eigenproblem
+
+$$
+H_\beta C=H_0C\Lambda,\qquad C^\top H_0C=I.
+$$
+
+Directions are recovered from $V=H_0C$. Each column is normalized by its signed column sum. The mixture is selected using the joint off-diagonal residual of measured training Hessians, with a spectral-gap tie break. Ground-truth parameter error does not enter this within-run mixture selection.
+
+## Output coefficients
+
+Draw $N_G=1,048,576$ input points $x_r\sim\mathcal N(0,I_8)$ and query $f(x_r)$. Holding both estimated hidden layers fixed, define
+
+$$
+\Phi_{rj}=\left[\widehat W_2^\top
+      (\widehat W_1^\top x_r)^{\odot4}\right]_j^4,
+\qquad
+\widehat a=\mathop{\arg\min}_{b\in\mathbb R^3}\|\Phi b-f(X)\|_2^2.
+$$
+
+The solver uses scaled SVD least squares, without an intercept or regularization. The saved coefficients are the fitted coefficients; they are not projected onto a simplex.
+
+## Parameter comparison
+
+Evaluation aligns hidden-unit permutations sequentially and allows sign changes in the first layer, consistent with the even activation. The following quantities are reported:
+
+$$
+\|\widehat W_{1,\mathrm{aligned}}-W_1\|_2,\qquad
+\|\widehat W_{2,\mathrm{aligned}}-W_2\|_2,\qquad
+\|\widehat a_{\mathrm{aligned}}-a\|_1.
+$$
+
+`weights.json` and `weights.npz` retain ground truth, raw estimates, aligned estimates, and signed differences. `weights.csv` records every aligned coordinate separately. This alignment changes labels, not the network function.

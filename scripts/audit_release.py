@@ -27,6 +27,8 @@ def main():
         maximum = max(maximum, (size, name))
         if size >= 100 * 1024 * 1024:
             problems.append(f"Oversized ordinary Git file: {name}")
+        if path.suffix.lower() == ".html":
+            problems.append(f"Unexpected HTML report: {name}")
         if name.split("/")[0] in {".venv", "cache", "tmp", "archive", "datasets", "results"}:
             problems.append(f"Runtime or private archive file tracked: {name}")
         if re.search(r"[\u4e00-\u9fff]", name):

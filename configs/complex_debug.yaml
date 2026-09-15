@@ -1,9 +1,0 @@
-# Experimental choices; not theorem-certified constants.
-experiment_name: complex_debug
-oracle:
-  mode: complex_debug
-evaluation:
-  gaussian_test_points: 1000
-  gaussian_batches: 2
-  angular_risk_directions: 1000
-  angular_risk_batches: 2

@@ -1,7 +1,0 @@
-# Experimental choices; not theorem-certified constants.
-experiment_name: single_layer_smoke
-kind: single_layer
-oracle:
-  mode: true_suffix_debug
-diagnostic:
-  reference_directions: 1024

@@ -1,1 +1,1 @@
-"""Reproducible orchestration, stage-boundary checkpoints, and aggregation."""
+"""Numerical experiment drivers and stage checkpoints."""

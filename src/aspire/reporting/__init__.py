@@ -1,1 +1,1 @@
-"""English offline reports and exportable scientific figures."""
+"""Parameter comparison files and Matplotlib figures."""
