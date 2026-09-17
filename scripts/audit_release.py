@@ -8,6 +8,10 @@ import sys
 
 sys.dont_write_bytecode = True
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+USER_HOME_PATTERN = re.compile(
+    r"(?:[A-Z]:[/\\]+Users[/\\]+|/(?:Users|home)/)[^/\\\s\"'<>]+",
+    re.I,
+)
 
 
 def main():
@@ -37,7 +41,7 @@ def main():
             content = path.read_text(encoding="utf-8-sig")
             if re.search(r"[\u4e00-\u9fff]", content):
                 problems.append(f"Untranslated text: {name}")
-            if re.search(r"C:[/\\]+Users[/\\]+13681", content, re.I):
+            if USER_HOME_PATTERN.search(content):
                 problems.append(f"Local user path in public file: {name}")
             if path.suffix == ".py":
                 ast.parse(content, filename=name)

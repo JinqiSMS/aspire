@@ -9,8 +9,6 @@ The first hidden layer uses column-space recovery and ASPIRE. The second hidden 
 ## Installation
 
 ```bash
-git clone https://github.com/JinqiSMS/aspire.git
-cd aspire
 conda env create -f environment.yml
 conda activate aspire
 ```
@@ -52,7 +50,6 @@ The complete settings are in [experiment_k4.yaml](configs/experiment_k4.yaml), [
 - Second layer: one anchor Hessian, 12 probe Hessians, and 64 random mixtures; direction seed `431061063`, mixture seed `2356887966`.
 - Held-out Hessians: six probes; seed `2828169828`.
 - Output regression: **1,048,576** standard Gaussian inputs; seed `1586144878`.
-- Prediction evaluation: 20,000 angular directions; seed `1444349591`.
 
 Each stage uses its own `numpy.random.default_rng(seed)`. The entry point fixes numerical-library thread counts to one. Batch size is part of the first-layer random-number layout. The target arrays in `data/experiment/ground_truth.npz` are checked by SHA-256. Floating-point values can vary slightly between numerical-library builds.
 
@@ -119,8 +116,8 @@ Allow approximately **one hour per full configuration** on an Intel Core i5-1350
 
 Complete learning-query totals, including the first layer, training Hessians, and Gaussian regression labels, are:
 
-- $k=4$: **31,995,202,054**; including held-out Hessians and prediction evaluation: **31,995,222,234**.
-- $k=6$: **33,001,837,730**; including held-out Hessians and prediction evaluation: **33,001,857,982**.
-- $k=8$: **33,337,385,790**; including held-out Hessians and prediction evaluation: **33,337,406,114**.
+- $k=4$: **31,995,202,054**.
+- $k=6$: **33,001,837,730**.
+- $k=8$: **33,337,385,790**.
 
 The network degree is $k^2$. First-layer gradient interpolation uses $k^2+1$ nodes per direction, and suffix-Hessian interpolation uses $k+1$. Degree-dependent node counts and radius bounds explain the different query costs. Exact stage counts are saved in `queries.json`.
